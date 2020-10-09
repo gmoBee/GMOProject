@@ -1445,7 +1445,7 @@ PrefabInstance:
     - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
         type: 3}
       propertyPath: slidePercent
-      value: 0.67
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
         type: 3}
@@ -1486,6 +1486,26 @@ PrefabInstance:
         type: 3}
       propertyPath: slideTransitionCurve.m_Curve.Array.data[1].outSlope
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
+        type: 3}
+      propertyPath: experimental
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
+        type: 3}
+      propertyPath: slideTransitionCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
+        type: 3}
+      propertyPath: slideTransitionCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
+        type: 3}
+      propertyPath: slideTransitionDuration
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3843716870331872629, guid: b2a0df894ff4e104094394ec3de0a9b2,
         type: 3}
@@ -1577,7 +1597,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3843716870190975474, guid: b2a0df894ff4e104094394ec3de0a9b2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b2a0df894ff4e104094394ec3de0a9b2, type: 3}
 --- !u!1 &1411729664
 GameObject:

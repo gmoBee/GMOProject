@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class moving : MonoBehaviour
 {
-
     // setting variables for movement code. Default speed is 5, but i can be changed in unity 
     [SerializeField]
-    public CharacterController controller;
+    private CharacterController controller = null;
     public float _speed = 5f;
     public float jumpSpeed = 5f;
     private float movement = 0f;
+
     private Rigidbody rigidBody;
     public Transform groundCheck;
     public float GroundDistance =0.5f;
@@ -33,12 +33,10 @@ public class moving : MonoBehaviour
         if (movement > 0f)
         {
             rigidBody.velocity = new Vector3(movement * _speed, rigidBody.velocity.y);
-           
         }
         else if (movement < 0f)
         {
             rigidBody.velocity = new Vector3(movement * _speed, rigidBody.velocity.y);
-           
         }
         else
         {
@@ -48,8 +46,7 @@ public class moving : MonoBehaviour
         {
             rigidBody.velocity = new Vector3(rigidBody.velocity.x, jumpSpeed);
         }
-
-       
-
     }
+
+    
 }

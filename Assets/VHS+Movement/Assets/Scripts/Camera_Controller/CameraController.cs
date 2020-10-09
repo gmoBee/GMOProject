@@ -13,7 +13,6 @@ namespace VHS
                 [Space,Header("Custom Classes")]
                 [SerializeField] private CameraZoom cameraZoom = null;
                 [SerializeField] private CameraSwaying cameraSway = null;
-
             #endregion
 
             #region Settings
@@ -24,18 +23,17 @@ namespace VHS
             #endregion
 
             #region Private
-               private float m_yaw;
-               private float m_pitch;
+                private float m_yaw;
+                private float m_pitch;
 
-               private float m_desiredYaw;
-               private float m_desiredPitch;
+                private float m_desiredYaw;
+                private float m_desiredPitch;
 
                 #region Components                    
                     private Transform m_pitchTranform;
                     private Camera m_cam;
                 #endregion
             #endregion
-            
         #endregion
 
         #region BuiltIn Methods  

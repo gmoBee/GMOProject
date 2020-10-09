@@ -1,11 +1,9 @@
-﻿                    using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class sliding : MonoBehaviour
-
 {
-
     Rigidbody rig;
     CapsuleCollider colider;
 
@@ -13,6 +11,7 @@ public class sliding : MonoBehaviour
     float reduceHeight;
     public float slideSpeed = 7f;
     bool isSliding;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +39,6 @@ public class sliding : MonoBehaviour
         colider.height = reduceHeight;
         rig.AddForce(transform.forward * slideSpeed, ForceMode.VelocityChange);
     }
-
 
     private void StandUp()
     {

@@ -7,18 +7,12 @@ namespace VHS
     [RequireComponent(typeof(CharacterController))]
     public class FirstPersonController : MonoBehaviour
     {
-
-
-        
-
-       
         #region Variables
         #region Private Serialized     
         #region Data
         [Space, Header("Data")]
         [SerializeField] private MovementInputData movementInputData = null;
         [SerializeField] private HeadBobData headBobData = null;
-
         #endregion
 
         #region Locomotion
@@ -28,12 +22,8 @@ namespace VHS
         [SerializeField] private float runSpeed = 3f;
         [SerializeField] private float jumpSpeed = 5f;
         [SerializeField] private float slideSpeed = 7f; // added vby GMO_Bee
-
-    
-
         [Slider(0f, 1f)] [SerializeField] private float moveBackwardsSpeedPercent = 0.5f;
         [Slider(0f, 1f)] [SerializeField] private float moveSideSpeedPercent = 0.75f;
-
         #endregion
 
         #region Run Settings
@@ -42,19 +32,17 @@ namespace VHS
         [SerializeField] private AnimationCurve runTransitionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
         #endregion
 
-        #region Crouch Settings
-        [Space, Header("Crouch Settings")]
+        #region Slide & Crouch Settings
+        [Space, Header("Slide & Crouch Settings")]
+        [SerializeField] private LayerMask roofLayer = new LayerMask();
+        // Crouch Settings
         [Slider(0.2f, 0.9f)] [SerializeField] private float crouchPercent = 0.6f;
         [SerializeField] private float crouchTransitionDuration = 1f;
         [SerializeField] private AnimationCurve crouchTransitionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-        #endregion
-        #region Slide settings 
-        [Space, Header("Slide")]
+        // Slide Settings
         [Slider(0.2f, 0.9f)] [SerializeField] private float slidePercent = 0.6f;
         [SerializeField] private float slideTransitionDuration = 1f;
         [SerializeField] private AnimationCurve slideTransitionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-
-
         #endregion
         #endregion
 
@@ -83,7 +71,6 @@ namespace VHS
         [SerializeField] private LayerMask obstacleLayers = ~0;
         [Slider(0f, 1f)] [SerializeField] private float rayObstacleLength = 0.1f;
         [Slider(0.01f, 1f)] [SerializeField] private float rayObstacleSphereRadius = 0.1f;
-
         #endregion
 
         #region Smooth Settings
@@ -99,11 +86,9 @@ namespace VHS
         [InfoBox("It should smooth our player movement to not start fast and not stop fast but it's somehow jerky", InfoBoxType.Warning)]
         [Tooltip("If set to very high it will stop player immediately after releasing input, otherwise it just another smoothing to our movement to make our player not move fast immediately and not stop immediately")]
         [ShowIf("experimental")] [Range(1f, 100f)] [SerializeField] private float smoothInputMagnitudeSpeed = 5f;
-
         #endregion
 
         #endregion
-
         
         #region Private Non-Serialized
         #region Components / Custom Classes / Caches
@@ -152,6 +137,7 @@ namespace VHS
         [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private float m_crouchCamHeight;
         [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private float m_crouchStandHeightDifference;
         [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_duringCrouchAnimation;
+        [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_duringSlideAnimation;
         [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_duringRunAnimation;
         [Space]
         [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private float m_inAirTimer;
@@ -166,13 +152,11 @@ namespace VHS
         #endregion
         #endregion
 
-
-        #region BuiltIn Methods     
+        #region Unity BuiltIn Methods     
         protected virtual void Start()
         {
             GetComponents();
             InitVariables();
-            
         }
 
         protected virtual void Update()
@@ -199,11 +183,9 @@ namespace VHS
                 CalculateSpeed();
                 CalculateFinalMovement();
 
-
-                
-
                 // Handle Player Movement, Gravity, Jump, Crouch etc.
                 HandleCrouch();
+                HandleSlide();
                 HandleHeadBob();
                 HandleRunFOV();
                 HandleCameraSway();
@@ -217,15 +199,17 @@ namespace VHS
         }
 
         /*
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere((transform.position + m_characterController.center) - Vector3.up * m_finalRayLength, raySphereRadius);
+        }
+        */
 
-            private void OnDrawGizmos()
-            {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere((transform.position + m_characterController.center) - Vector3.up * m_finalRayLength, raySphereRadius);
-            }
+        protected virtual void OnDrawGizmos()
+        {
 
-         */
-
+        }
         #endregion
 
         #region Custom Methods
@@ -238,18 +222,10 @@ namespace VHS
             m_camTransform = GetComponentInChildren<Camera>().transform;
             m_headBob = new HeadBob(headBobData, moveBackwardsSpeedPercent, moveSideSpeedPercent);
 
-
             // speed initializing 
-
-
-
         }
 
-
-     
-    
-
-    protected virtual void InitVariables()
+        protected virtual void InitVariables()
         {
             // Calculate where our character center should be based on height and skin width
             m_characterController.center = new Vector3(0f, m_characterController.height / 2f + m_characterController.skinWidth, 0f);
@@ -303,7 +279,6 @@ namespace VHS
 
         protected virtual void SmoothDir()
         {
-
             m_smoothFinalMoveDir = Vector3.Lerp(m_smoothFinalMoveDir, m_finalMoveDir, Time.deltaTime * smoothFinalDirectionSpeed);
             Debug.DrawRay(transform.position, m_smoothFinalMoveDir, Color.yellow);
         }
@@ -311,7 +286,8 @@ namespace VHS
         protected virtual void SmoothInputMagnitude()
         {
             m_inputVectorMagnitude = m_inputVector.magnitude;
-            m_smoothInputVectorMagnitude = Mathf.Lerp(m_smoothInputVectorMagnitude, m_inputVectorMagnitude, Time.deltaTime * smoothInputMagnitudeSpeed);
+            m_smoothInputVectorMagnitude = Mathf.Lerp(m_smoothInputVectorMagnitude, m_inputVectorMagnitude, 
+                Time.deltaTime * smoothInputMagnitudeSpeed);
         }
         #endregion
 
@@ -328,7 +304,6 @@ namespace VHS
 
         protected virtual void CheckIfWall()
         {
-
             Vector3 _origin = transform.position + m_characterController.center;
             RaycastHit _wallInfo;
 
@@ -341,12 +316,12 @@ namespace VHS
             m_hitWall = _hitWall ? true : false;
         }
 
-        protected virtual bool CheckIfRoof() /// TO FIX
+        protected virtual bool CheckIfRoof() // TODO: FIX
         {
             Vector3 _origin = transform.position;
             RaycastHit _roofInfo;
 
-            bool _hitRoof = Physics.SphereCast(_origin, raySphereRadius, Vector3.up, out _roofInfo, m_initHeight);
+            bool _hitRoof = Physics.SphereCast(_origin, raySphereRadius, Vector3.up, out _roofInfo, m_initHeight, roofLayer);
 
             return _hitRoof;
         }
@@ -385,10 +360,12 @@ namespace VHS
         protected virtual void CalculateSpeed()
         {
             m_currentSpeed = movementInputData.IsRunning && CanRun() ? runSpeed : walkSpeed;
+            m_currentSpeed = movementInputData.IsSliding ? slideSpeed : m_currentSpeed;
             m_currentSpeed = movementInputData.IsCrouching ? crouchSpeed : m_currentSpeed;
             m_currentSpeed = !movementInputData.HasInput ? 0f : m_currentSpeed;
             m_currentSpeed = movementInputData.InputVector.y == -1 ? m_currentSpeed * moveBackwardsSpeedPercent : m_currentSpeed;
-            m_currentSpeed = movementInputData.InputVector.x != 0 && movementInputData.InputVector.y == 0 ? m_currentSpeed * moveSideSpeedPercent : m_currentSpeed;
+            m_currentSpeed = movementInputData.InputVector.x != 0 && movementInputData.InputVector.y == 0 ? 
+                m_currentSpeed * moveSideSpeedPercent : m_currentSpeed;
         }
 
         protected virtual void CalculateFinalMovement()
@@ -407,9 +384,7 @@ namespace VHS
 
         #region Crouching Methods
         protected virtual void HandleCrouch()
-
         {
-
             if (movementInputData.CrouchClicked && m_isGrounded && m_currentSpeed < runSpeed )
                 InvokeCrouchRoutine();
         }
@@ -467,32 +442,24 @@ namespace VHS
 
             m_duringCrouchAnimation = false;
         }
-
         #endregion
+
         // added by GMO_Bee
         #region Sliding Methods 
-
-        #endregion
-
-
         protected virtual void HandleSlide()
-
         {
-
-            if (movementInputData.SlideClicked && m_isGrounded )
+            if (movementInputData.SlideClicked && m_isGrounded)
                 InvokeSlideRoutine();
-           
         }
-
 
         protected virtual void InvokeSlideRoutine()
         {
-            if (movementInputData.isSliding)
+            if (movementInputData.IsSliding)
                 if (CheckIfRoof())
                     return;
 
             if (m_LandRoutine != null)
-                StopCoroutine(m_SlideRoutine);
+                StopCoroutine(m_LandRoutine);
 
             if (m_SlideRoutine != null)
                 StopCoroutine(m_SlideRoutine);
@@ -503,7 +470,8 @@ namespace VHS
 
         protected virtual IEnumerator SlideRoutine()
         {
-            m_duringCrouchAnimation = true;
+            // Pre-Animation
+            m_duringSlideAnimation = true;
 
             float _percent = 0f;
             float _smoothPercent = 0f;
@@ -512,20 +480,24 @@ namespace VHS
             float _currentHeight = m_characterController.height;
             Vector3 _currentCenter = m_characterController.center;
 
-            float _desiredHeight = movementInputData.isSliding  ? m_initHeight : m_crouchHeight;
-            Vector3 _desiredCenter = movementInputData.isSliding ? m_initCenter : m_crouchCenter;
+            float _desiredHeight = m_crouchHeight;
+            Vector3 _desiredCenter = m_crouchCenter;
 
             Vector3 _camPos = m_yawTransform.localPosition;
             float _camCurrentHeight = _camPos.y;
-            float _camDesiredHeight = movementInputData.isSliding ? m_initCamHeight : m_crouchCamHeight;
+            float _camDesiredHeight = m_crouchCamHeight;
 
-            movementInputData.isSliding = !movementInputData.isSliding;
-            m_headBob.CurrentStateHeight = movementInputData.isSliding ? m_crouchCamHeight : m_initCamHeight;
+            m_headBob.CurrentStateHeight = m_crouchCamHeight;
 
-            while (_percent < 1f)
+            // TODO: Lock Player RotationMovement
+
+            // Execute Animation
+            while (_percent < 1f && movementInputData.IsSliding)
             {
                 _percent += Time.deltaTime * _speed;
                 _smoothPercent = slideTransitionCurve.Evaluate(_percent);
+
+                Debug.Log(_smoothPercent);
 
                 m_characterController.height = Mathf.Lerp(_currentHeight, _desiredHeight, _smoothPercent);
                 m_characterController.center = Vector3.Lerp(_currentCenter, _desiredCenter, _smoothPercent);
@@ -536,25 +508,22 @@ namespace VHS
                 yield return null;
             }
 
-            m_duringCrouchAnimation = false;
+            // Post-Animation
+            m_characterController.height = m_initHeight;
+            m_characterController.center = m_initCenter;
+            m_headBob.CurrentStateHeight = m_initCamHeight;
+
+            // TODO: Unlock Player RotationMovement
+
+            m_duringSlideAnimation = false;
         }
-
-
-
-
-
-
-
-
-
+        #endregion
 
         #region Landing Methods
         protected virtual void HandleLanding()
         {
             if (!m_previouslyGrounded && m_isGrounded)
-            {
                 InvokeLandingRoutine();
-            }
         }
 
         protected virtual void InvokeLandingRoutine()
@@ -592,7 +561,6 @@ namespace VHS
         #endregion
 
         #region Locomotion Apply Methods
-
         protected virtual void HandleHeadBob()
         {
 
@@ -601,21 +569,20 @@ namespace VHS
                 if (!m_duringCrouchAnimation) // we want to make our head bob only if we are moving and not during crouch routine
                 {
                     m_headBob.ScrollHeadBob(movementInputData.IsRunning && CanRun(), movementInputData.IsCrouching, movementInputData.InputVector);
-                    m_yawTransform.localPosition = Vector3.Lerp(m_yawTransform.localPosition, (Vector3.up * m_headBob.CurrentStateHeight) + m_headBob.FinalOffset, Time.deltaTime * smoothHeadBobSpeed);
+                    m_yawTransform.localPosition = Vector3.Lerp(m_yawTransform.localPosition, 
+                        (Vector3.up * m_headBob.CurrentStateHeight) + m_headBob.FinalOffset, Time.deltaTime * smoothHeadBobSpeed);
                 }
             }
             else // if we are not moving or we are not grounded
             {
                 if (!m_headBob.Resetted)
-                {
                     m_headBob.ResetHeadBob();
-                }
 
                 if (!m_duringCrouchAnimation) // we want to reset our head bob only if we are standing still and not during crouch routine
                     m_yawTransform.localPosition = Vector3.Lerp(m_yawTransform.localPosition, new Vector3(0f, m_headBob.CurrentStateHeight, 0f), Time.deltaTime * smoothHeadBobSpeed);
             }
 
-            //m_camTransform.localPosition = Vector3.Lerp(m_camTransform.localPosition,m_headBob.FinalOffset,Time.deltaTime * smoothHeadBobSpeed);
+            //m_camTransform.localPosition = Vector3.Lerp(m_camTransform.localPosition, m_headBob.FinalOffset, Time.deltaTime * smoothHeadBobSpeed);
         }
 
         protected virtual void HandleCameraSway()
@@ -649,6 +616,7 @@ namespace VHS
                 }
             }
         }
+
         protected virtual void HandleJump()
         {
             if (movementInputData.JumpClicked && !movementInputData.IsCrouching)

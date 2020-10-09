@@ -113,10 +113,7 @@ namespace VHS
                     // transform.localPosition = _posOffset;
                     // transform.localEulerAngles = _rotOffset;
                 }
-
-                
             }   
         #endregion
-
     }
 }
