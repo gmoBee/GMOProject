@@ -6,6 +6,7 @@ using UnityEngine;
 namespace VHS
 {    
     [CreateAssetMenu(fileName = "InteractionInputData", menuName = "InteractionSystem/InputData")]
+
     public class InteractionInputData : ScriptableObject
     {
         private bool m_interactedClicked;
