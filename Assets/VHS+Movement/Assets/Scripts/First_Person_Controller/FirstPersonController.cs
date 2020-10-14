@@ -11,6 +11,7 @@ namespace VHS
         #region Private Serialized     
         #region Data
         [Space, Header("Data")]
+        [SerializeField] private WeaponInputData weaponInputData = null;
         [SerializeField] private MovementInputData movementInputData = null;
         [SerializeField] private HeadBobData headBobData = null;
         #endregion
@@ -146,9 +147,6 @@ namespace VHS
         [BoxGroup("DEBUG")] [ShowIf("experimental")] [SerializeField] [ReadOnly] private float m_inputVectorMagnitude;
         [BoxGroup("DEBUG")] [ShowIf("experimental")] [SerializeField] [ReadOnly] private float m_smoothInputVectorMagnitude;
         #endregion
-        #endregion
-        #region Sliding Variables 
-
         #endregion
         #endregion
 
@@ -461,7 +459,7 @@ namespace VHS
             if (m_LandRoutine != null)
                 StopCoroutine(m_LandRoutine);
 
-            if (m_SlideRoutine != null)
+            if (m_SlideRoutine != null && m_duringSlideAnimation)
                 StopCoroutine(m_SlideRoutine);
 
             m_SlideRoutine = SlideRoutine();
@@ -489,15 +487,13 @@ namespace VHS
 
             m_headBob.CurrentStateHeight = m_crouchCamHeight;
 
-            // TODO: Lock Player RotationMovement
+            // TODO POSTPONED: Lock Player RotationMovement
 
             // Execute Animation
             while (_percent < 1f && movementInputData.IsSliding)
             {
                 _percent += Time.deltaTime * _speed;
                 _smoothPercent = slideTransitionCurve.Evaluate(_percent);
-
-                Debug.Log(_smoothPercent);
 
                 m_characterController.height = Mathf.Lerp(_currentHeight, _desiredHeight, _smoothPercent);
                 m_characterController.center = Vector3.Lerp(_currentCenter, _desiredCenter, _smoothPercent);
@@ -513,7 +509,7 @@ namespace VHS
             m_characterController.center = m_initCenter;
             m_headBob.CurrentStateHeight = m_initCamHeight;
 
-            // TODO: Unlock Player RotationMovement
+            // TODO POSTPONED: Unlock Player RotationMovement
 
             m_duringSlideAnimation = false;
         }
