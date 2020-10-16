@@ -6,7 +6,8 @@ namespace VHS
     public class InputHandler : MonoBehaviour
     {
         #region Data
-        [Space,Header("Input Data")]
+        [Space, Header("Input Data")]
+        [SerializeField] private WeaponInputData weaponInputData = null;
         [SerializeField] private CameraInputData cameraInputData = null;
         [SerializeField] private MovementInputData movementInputData = null;
         [SerializeField] private InteractionInputData interactionInputData = null;
@@ -15,6 +16,7 @@ namespace VHS
         #region Unity BuiltIn Methods
         void Start()
         {
+            weaponInputData.ResetInput();
             cameraInputData.ResetInput();
             movementInputData.ResetInput();
             interactionInputData.ResetInput();
@@ -25,6 +27,7 @@ namespace VHS
             GetCameraInput();
             GetMovementInputData();
             GetInteractionInputData();
+            GetWeaponInputData();
         }
         #endregion
 
@@ -69,6 +72,23 @@ namespace VHS
 
             if (movementInputData.SlideReleased)
                 movementInputData.IsSliding = false;
+        }
+
+        void GetWeaponInputData()
+        {
+            // Crosshair target position
+            Ray m_crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+            weaponInputData.CrossHairPosition = m_crosshairRay.GetPoint(100f);
+
+            weaponInputData.IsReloading = Input.GetKeyDown(KeyCode.R);
+            weaponInputData.ShootClicked = Input.GetMouseButtonDown(0);
+            weaponInputData.ShootReleased = Input.GetMouseButtonUp(0);
+
+            if (weaponInputData.ShootClicked)
+                weaponInputData.IsShooting = true;
+
+            if (weaponInputData.ShootReleased)
+                weaponInputData.IsShooting = false;
         }
         #endregion
     }

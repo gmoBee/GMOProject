@@ -1407,120 +1407,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3843716869363435366, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.374
+    - target: {fileID: 1395508999, guid: b2a0df894ff4e104094394ec3de0a9b2, type: 3}
+      propertyPath: fireRate
+      value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 3843716869363435367, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: sensitivity.x
-      value: 100
+    - target: {fileID: 1395508999, guid: b2a0df894ff4e104094394ec3de0a9b2, type: 3}
+      propertyPath: damageRate
+      value: 12
       objectReference: {fileID: 0}
-    - target: {fileID: 3843716869363435367, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: sensitivity.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870190975470, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: groundLayer.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: crouchSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: walkSpeed
-      value: 4.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slidePercent
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[0].value
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[0].time
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[0].tangentMode
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[1].tangentMode
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[0].inSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[0].outSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[1].inSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[1].outSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: experimental
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[1].value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionCurve.m_Curve.Array.data[1].time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872628, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: slideTransitionDuration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872629, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872629, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: m_Height
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872629, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
+    - target: {fileID: 1395508999, guid: b2a0df894ff4e104094394ec3de0a9b2, type: 3}
+      propertyPath: maxBurnRange
+      value: 2.83
       objectReference: {fileID: 0}
     - target: {fileID: 3843716870331872631, guid: b2a0df894ff4e104094394ec3de0a9b2,
         type: 3}
@@ -1584,21 +1481,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3843716870331872635, guid: b2a0df894ff4e104094394ec3de0a9b2,
         type: 3}
-      propertyPath: interactableLayer.m_Bits
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3843716870331872635, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
       propertyPath: uiPanel
       value: 
       objectReference: {fileID: 929763965}
-    - target: {fileID: 3843716870331872635, guid: b2a0df894ff4e104094394ec3de0a9b2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3843716870190975474, guid: b2a0df894ff4e104094394ec3de0a9b2, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2a0df894ff4e104094394ec3de0a9b2, type: 3}
 --- !u!1 &1411729664
 GameObject:
