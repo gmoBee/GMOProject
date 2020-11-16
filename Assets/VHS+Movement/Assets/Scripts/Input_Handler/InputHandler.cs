@@ -78,7 +78,7 @@ namespace VHS
         {
             // Crosshair target position
             Ray m_crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
-            weaponInputData.CrossHairPosition = m_crosshairRay.GetPoint(100f);
+            weaponInputData.CrossHairTargetPos = m_crosshairRay.GetPoint(100f);
 
             weaponInputData.IsReloading = Input.GetKeyDown(KeyCode.R);
             weaponInputData.ShootClicked = Input.GetMouseButtonDown(0);

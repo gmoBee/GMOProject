@@ -8,7 +8,7 @@ namespace VHS
     public class WeaponInputData : ScriptableObject
     {
         #region Data
-        Vector3 m_crossHairPosition;
+        Vector3 m_crosshairTargetPos;
         bool m_shootClicked;
         bool m_isShooting;
         bool m_shootReleased;
@@ -18,10 +18,10 @@ namespace VHS
         #endregion
 
         #region Properties
-        public Vector3 CrossHairPosition
+        public Vector3 CrossHairTargetPos
         {
-            get => m_crossHairPosition;
-            set => m_crossHairPosition = value;
+            get => m_crosshairTargetPos;
+            set => m_crosshairTargetPos = value;
         }
 
         public bool ShootClicked
@@ -58,7 +58,7 @@ namespace VHS
         #region Custom Method
         public void ResetInput()
         {
-            m_crossHairPosition = Vector3.zero;
+            m_crosshairTargetPos = Vector3.zero;
             m_isHolding = false;
             m_isShooting = false;
             m_isReloading = false;

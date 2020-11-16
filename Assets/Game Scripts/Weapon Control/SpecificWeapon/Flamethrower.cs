@@ -34,7 +34,7 @@ namespace VHS
 
         private void Burn()
         {
-            Vector3 m_hitDir = (weaponInputData.CrossHairPosition - Barrel.position).normalized;
+            Vector3 m_hitDir = (weaponInputData.CrossHairTargetPos - Barrel.position).normalized;
             RaycastHit[] m_hits = Physics.CapsuleCastAll(Barrel.position, Barrel.position + m_hitDir, intensity, 
                 m_hitDir, maxBurnRange, targetHitLayer);
             Debug.DrawRay(Barrel.position, m_hitDir * maxBurnRange, Color.red);

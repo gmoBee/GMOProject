@@ -9,7 +9,7 @@ namespace VHS
     {
         #region Private Serialized
         #region Requirements
-        [Space, Header("Datas")]
+        [Space, Header("Data")]
         [SerializeField] private RectTransform crosshairTemplate = null;
         [SerializeField] protected WeaponInputData weaponInputData = null;
         #endregion

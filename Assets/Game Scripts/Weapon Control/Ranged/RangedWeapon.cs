@@ -8,15 +8,18 @@ namespace VHS
     public abstract class RangedWeapon : Weapon
     {
         #region Ranged Weapon Attributes
+        #region Serialized Variables
         [Space, Header("Ranged Weapon Settings")]
         [SerializeField] private int maxAmmo;
         [SerializeField] private float reloadTime;
-        [SerializeField] public GameObject bulletPrefab;
-        [SerializeField] public Transform gunBarrel;
-        [Slider(1f, 1000f)] [SerializeField] public double shootForce = 10f;
+        [SerializeField] private GameObject bulletPrefab;
+        [SerializeField] private Transform gunBarrel;
+        [Slider(100f, 10000f)] [SerializeField] protected int shootForce = 100;
+        #endregion
         private bool m_weaponActive;
         private IEnumerator m_shootingRoutine;
         private IEnumerator m_reloadingRoutine;
+        protected Queue<GameObject> ammoPool = new Queue<GameObject>();
         #endregion
         #region Debugger (Optional)
         [Space]
@@ -33,8 +36,6 @@ namespace VHS
             {
                 if (value > maxAmmo)
                     ammo = maxAmmo;
-                else if (value < 0)
-                    ammo = 0;
                 else
                     ammo = value;
             }
@@ -42,8 +43,8 @@ namespace VHS
 
         public int MaxAmmo
         {
-            get => maxAmmo;  
-            set
+            get => maxAmmo;
+            set 
             {
                 if (ammo > value)
                     ammo = value;
@@ -57,12 +58,9 @@ namespace VHS
             set => reloadTime = value;
         }
 
-        public double ShootForce
-        {
-            get => shootForce;
-            set => shootForce = value;
-        }
-
+        /// <summary>
+        /// Get weapon barrel transform. Used for getting a specific position to shoot bullet from.
+        /// </summary>
         public Transform Barrel
         {
             get => gunBarrel;
@@ -73,6 +71,19 @@ namespace VHS
         protected virtual void OnEnable()
         {
             m_weaponActive = true;
+            if (ammoPool.Count == 0)
+            {
+                if (bulletPrefab.activeSelf)
+                    bulletPrefab.SetActive(false);
+
+                for (int i = 0; i < maxAmmo; i++)
+                {
+                    GameObject newAmmo = Instantiate(bulletPrefab);
+                    BulletScript ammoBullet = newAmmo.GetComponent<BulletScript>();
+                    ammoBullet.ReferedWeapon = this;
+                    ammoPool.Enqueue(newAmmo);
+                }
+            }
         }
 
         private void FixedUpdate()
@@ -128,6 +139,16 @@ namespace VHS
         }
 
         protected abstract IEnumerator ReloadRoutine();
+        #endregion
+
+        #region Custom Methods
+        public void SendAmmoBack(GameObject usedAmmo)
+        {
+            if (usedAmmo.activeSelf)
+                usedAmmo.SetActive(false);
+
+            ammoPool.Enqueue(usedAmmo);
+        }
         #endregion
     }
 }

@@ -34,11 +34,10 @@ namespace VHS
 
         private void Shoot1()
         {
-            Instantiate(bulletPrefab, gunBarrel.position, gunBarrel.rotation);
-
-            // TODO: Hit Something
-
-            Ammo--;
+            BulletScript bullet = ammoPool.Dequeue().GetComponent<BulletScript>();
+            bullet.transform.position = Barrel.position;
+            Vector3 m_shootdir = (weaponInputData.CrossHairTargetPos - Barrel.position).normalized;
+            bullet.Shoot(m_shootdir, shootForce);
         }
 
         protected override IEnumerator ShootRoutine()
