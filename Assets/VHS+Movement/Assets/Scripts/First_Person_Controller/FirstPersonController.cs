@@ -11,7 +11,6 @@ namespace VHS
         #region Private Serialized     
         #region Data
         [Space, Header("Data")]
-        [SerializeField] private WeaponInputData weaponInputData = null;
         [SerializeField] private MovementInputData movementInputData = null;
         [SerializeField] private HeadBobData headBobData = null;
         #endregion

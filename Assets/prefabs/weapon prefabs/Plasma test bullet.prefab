@@ -124,3 +124,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 982ce3ece8bb5fb46b1b0f7366c15d32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 5
+  fadingSeconds: 3
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  dir: {x: 0, y: 0, z: 0}
+  bulletRigid: {fileID: 0}
+  targetMaskHolder:
+    serializedVersion: 2
+    m_Bits: 0
+  speedHolder: 0

@@ -6,35 +6,39 @@ namespace VHS
     public class CameraController : MonoBehaviour
     {
         #region Variables
-        #region Data
-        [Space,Header("Data")]
-        [SerializeField] private CameraInputData camInputData = null;
+            #region Data
+            [Space,Header("Data")]
+            [SerializeField] private CameraInputData camInputData = null;
 
-        [Space,Header("Custom Classes")]
-        [SerializeField] private CameraZoom cameraZoom = null;
-        [SerializeField] private CameraSwaying cameraSway = null;
+            [Space,Header("Custom Classes")]
+            [SerializeField] private CameraZoom cameraZoom = null;
+            [SerializeField] private CameraSwaying cameraSway = null;
+            #endregion
+
+            #region Settings
+            [Space,Header("Look Settings")]
+            [SerializeField] private Vector2 sensitivity = Vector2.zero;
+            [SerializeField] private Vector2 smoothAmount = Vector2.zero;
+            [SerializeField] [MinMaxSlider(-90f,90f)] private Vector2 lookAngleMinMax = Vector2.zero;
+            #endregion
+
+            #region Private
+            private float m_yaw;
+            private float m_pitch;
+
+            private float m_desiredYaw;
+            private float m_desiredPitch;
+
+                #region Components                    
+                private Transform m_pitchTranform;
+                private Camera m_cam;
+                #endregion
+            #endregion
         #endregion
 
-        #region Settings
-        [Space,Header("Look Settings")]
-        [SerializeField] private Vector2 sensitivity = Vector2.zero;
-        [SerializeField] private Vector2 smoothAmount = Vector2.zero;
-        [SerializeField] [MinMaxSlider(-90f,90f)] private Vector2 lookAngleMinMax = Vector2.zero;
-        #endregion
-
-        #region Private
-        private float m_yaw;
-        private float m_pitch;
-
-        private float m_desiredYaw;
-        private float m_desiredPitch;
-
-        #region Components                    
-        private Transform m_pitchTranform;
-        private Camera m_cam;
-        #endregion
-        #endregion
-        #endregion
+        // Properties
+        public CameraZoom Zoom { get => cameraZoom; }
+        public CameraSwaying Sway { get => cameraSway; }
 
         #region BuiltIn Methods  
         void Awake()
@@ -106,7 +110,7 @@ namespace VHS
 
         public void ChangeRunFOV(bool _returning)
         {
-            cameraZoom.ChangeRunFOV(_returning,this);
+            cameraZoom.ChangeRunFOV(_returning, this);
         }
 
         void ChangeCursorState()

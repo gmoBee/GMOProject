@@ -5,6 +5,14 @@ namespace VHS
 {    
     public class InputHandler : MonoBehaviour
     {
+        // Input mapping
+        [SerializeField] private InputMap inputMap = new InputMap() {
+            // All default buttons
+            reloadButton = KeyCode.R, crouchButton = KeyCode.C, interactButton = KeyCode.E,
+            jumpButton = KeyCode.Space, runButton = KeyCode.LeftShift, slideButton = KeyCode.LeftControl,
+            shootButton = KeyCode.Mouse0, scopeButton = KeyCode.Mouse1
+        };
+
         #region Data
         [Space, Header("Input Data")]
         [SerializeField] private WeaponInputData weaponInputData = null;
@@ -34,8 +42,8 @@ namespace VHS
         #region Custom Methods
         void GetInteractionInputData()
         {
-            interactionInputData.InteractedClicked = Input.GetKeyDown(KeyCode.E);
-            interactionInputData.InteractedReleased = Input.GetKeyUp(KeyCode.E);
+            interactionInputData.InteractedClicked = Input.GetKeyDown(inputMap.interactButton);
+            interactionInputData.InteractedReleased = Input.GetKeyUp(inputMap.interactButton);
         }
 
         void GetCameraInput()
@@ -43,8 +51,15 @@ namespace VHS
             cameraInputData.InputVectorX = Input.GetAxis("Mouse X");
             cameraInputData.InputVectorY = Input.GetAxis("Mouse Y");
 
-            cameraInputData.ZoomClicked = Input.GetMouseButtonDown(1);
-            cameraInputData.ZoomReleased = Input.GetMouseButtonUp(1);
+            cameraInputData.ZoomClicked = Input.GetKeyDown(inputMap.scopeButton);
+            cameraInputData.ZoomReleased = Input.GetKeyUp(inputMap.scopeButton);
+
+            if (cameraInputData.ZoomClicked)
+                cameraInputData.IsZooming = true;
+
+            if (cameraInputData.ZoomReleased)
+                cameraInputData.IsZooming = false;
+            //Debug.Log($"Is Zooming: {cameraInputData.IsZooming}; Is Scoping: {weaponInputData.IsScoping}");
         }
 
         void GetMovementInputData()
@@ -52,8 +67,8 @@ namespace VHS
             movementInputData.InputVectorX = Input.GetAxisRaw("Horizontal");
             movementInputData.InputVectorY = Input.GetAxisRaw("Vertical");
 
-            movementInputData.RunClicked = Input.GetKeyDown(KeyCode.LeftShift);
-            movementInputData.RunReleased = Input.GetKeyUp(KeyCode.LeftShift);
+            movementInputData.RunClicked = Input.GetKeyDown(inputMap.runButton);
+            movementInputData.RunReleased = Input.GetKeyUp(inputMap.runButton);
 
             if(movementInputData.RunClicked)
                 movementInputData.IsRunning = true;
@@ -61,11 +76,11 @@ namespace VHS
             if(movementInputData.RunReleased)
                 movementInputData.IsRunning = false;
 
-            movementInputData.JumpClicked = Input.GetKeyDown(KeyCode.Space);
-            movementInputData.CrouchClicked = Input.GetKeyDown(KeyCode.C);
+            movementInputData.JumpClicked = Input.GetKeyDown(inputMap.jumpButton);
+            movementInputData.CrouchClicked = Input.GetKeyDown(inputMap.crouchButton);
 
-            movementInputData.SlideClicked = Input.GetKeyDown(KeyCode.LeftControl);
-            movementInputData.SlideReleased = Input.GetKeyUp(KeyCode.LeftControl);
+            movementInputData.SlideClicked = Input.GetKeyDown(inputMap.slideButton);
+            movementInputData.SlideReleased = Input.GetKeyUp(inputMap.slideButton);
 
             if (movementInputData.SlideClicked)
                 movementInputData.IsSliding = true;
@@ -77,12 +92,13 @@ namespace VHS
         void GetWeaponInputData()
         {
             // Crosshair target position
+            weaponInputData.CrosshairScreenPos = new Vector2(Screen.width / 2f, Screen.height / 2f);
             Ray m_crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
-            weaponInputData.CrossHairTargetPos = m_crosshairRay.GetPoint(100f);
+            weaponInputData.CrosshairTargetPos = m_crosshairRay.GetPoint(100f);
 
-            weaponInputData.IsReloading = Input.GetKeyDown(KeyCode.R);
-            weaponInputData.ShootClicked = Input.GetMouseButtonDown(0);
-            weaponInputData.ShootReleased = Input.GetMouseButtonUp(0);
+            weaponInputData.IsReloading = Input.GetKeyDown(inputMap.reloadButton);
+            weaponInputData.ShootClicked = Input.GetKeyDown(inputMap.shootButton);
+            weaponInputData.ShootReleased = Input.GetKeyUp(inputMap.shootButton);
 
             if (weaponInputData.ShootClicked)
                 weaponInputData.IsShooting = true;

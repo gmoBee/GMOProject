@@ -16,18 +16,22 @@ public class PlayerEntity : MonoBehaviour, IEntityInterface
     [SerializeField] private int maxOxygenLvl = 100;
     [SerializeField] protected Weapon holdingOnHand = null;
 
-    private Transform m_personControlTransform;
-
     // Debugger
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int currentOxygenLvl;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int currentHealth;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_currentOxygenLvl;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_currentHealth;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private FirstPersonController m_personControlTransform;
+
+    // Properties
+    public WeaponInputData WInputData { get => weaponInputData; }
 
     #region Unity BuiltIn Methods
     // Start is called before the first frame update
     void Start()
     {
         // Get self components by initializing player
-        InitPlayer();
+        m_personControlTransform = gameObject.GetComponent<FirstPersonController>();
+        m_currentHealth = maxHealth;
+        m_currentOxygenLvl = maxOxygenLvl;
     }
 
     // Update is called once per frame
@@ -36,13 +40,6 @@ public class PlayerEntity : MonoBehaviour, IEntityInterface
         
     }
     #endregion
-
-    private void InitPlayer()
-    {
-        m_personControlTransform = GetComponent<FirstPersonController>().transform;
-        currentHealth = maxHealth;
-        currentOxygenLvl = maxOxygenLvl;
-    }
 
     public void Heal(int amount)
     {
