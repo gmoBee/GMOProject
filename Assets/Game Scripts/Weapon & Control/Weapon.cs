@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum WeaponClass { Primary, Secondary };
+
 public abstract class Weapon : MonoBehaviour
 {
     // Template and Data
@@ -12,17 +14,19 @@ public abstract class Weapon : MonoBehaviour
 
     // Weapon Attributes
     [Header("Generic Weapon Attributes")]
-    [Slider(0.1f, 6f)] [SerializeField] private float fireRate;
-    [SerializeField] private float damageRate;
+    [Slider(0.1f, 5f)] [SerializeField] private float fireRate = 1f;
+    [SerializeField] private WeaponClass weaponClass = WeaponClass.Primary;
+    [SerializeField] private float damageRate = 5f;
     [SerializeField] protected LayerMask targetHitLayer;
-    [SerializeField] protected AnimationCurve normalFireRate;
+    [SerializeField] protected AnimationCurve normalFireRate = new AnimationCurve();
 
     // Properties
     public float FireRate { set { fireRate = value; } get { return fireRate; } }
     public float DamageRate { set { damageRate = value; } get { return damageRate; } }
     public WeaponInputData InputData { set { weaponInputData = value; } }
+    public WeaponClass WeaponClassification { get => weaponClass; }
 
-    #region Unity Built-In Methods
+    // Unity Built-In Methods
     protected virtual void OnEnable()
     {
         weaponInputData = GetComponentInParent<PlayerEntity>().WInputData;
@@ -34,5 +38,4 @@ public abstract class Weapon : MonoBehaviour
     {
         weaponInputData = null;
     }
-    #endregion
 }

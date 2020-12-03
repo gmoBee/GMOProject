@@ -8,9 +8,16 @@ namespace VHS
         // Input mapping
         [SerializeField] private InputMap inputMap = new InputMap() {
             // All default buttons
-            reloadButton = KeyCode.R, crouchButton = KeyCode.C, interactButton = KeyCode.E,
-            jumpButton = KeyCode.Space, runButton = KeyCode.LeftShift, slideButton = KeyCode.LeftControl,
-            shootButton = KeyCode.Mouse0, scopeButton = KeyCode.Mouse1
+            reloadButton = KeyCode.R, 
+            crouchButton = KeyCode.C, 
+            interactButton = KeyCode.E,
+            jumpButton = KeyCode.Space, 
+            runButton = KeyCode.LeftShift, 
+            slideButton = KeyCode.LeftControl,
+            shootButton = KeyCode.Mouse0, 
+            scopeButton = KeyCode.Mouse1, 
+            switchPrimaryButton = KeyCode.Alpha1,
+            switchSecondaryButton = KeyCode.Alpha2
         };
 
         #region Data
@@ -59,7 +66,6 @@ namespace VHS
 
             if (cameraInputData.ZoomReleased)
                 cameraInputData.IsZooming = false;
-            //Debug.Log($"Is Zooming: {cameraInputData.IsZooming}; Is Scoping: {weaponInputData.IsScoping}");
         }
 
         void GetMovementInputData()
@@ -99,6 +105,8 @@ namespace VHS
             weaponInputData.IsReloading = Input.GetKeyDown(inputMap.reloadButton);
             weaponInputData.ShootClicked = Input.GetKeyDown(inputMap.shootButton);
             weaponInputData.ShootReleased = Input.GetKeyUp(inputMap.shootButton);
+            weaponInputData.ChangePrimary = Input.GetKeyDown(inputMap.switchPrimaryButton);
+            weaponInputData.ChangeSecondary = Input.GetKeyDown(inputMap.switchSecondaryButton);
 
             if (weaponInputData.ShootClicked)
                 weaponInputData.IsShooting = true;

@@ -6,16 +6,15 @@ namespace VHS
     [System.Serializable]
     public class CameraSwaying
     {
-        #region Variables
+        // Variables
         [Space,Header("Sway Settings")]
         [SerializeField] private float swayAmount = 0f;
         [SerializeField] private float swaySpeed = 0f;
         [SerializeField] private float returnSpeed = 0f;
         [SerializeField] private float changeDirectionMultiplier = 0f;
-
         [SerializeField] private AnimationCurve swayCurve = new AnimationCurve();
 
-        #region Private
+        // Other Variables
         private Transform m_camTransform;
         private float m_scrollSpeed;
 
@@ -23,8 +22,7 @@ namespace VHS
         private float m_xAmountPreviousFrame;
  
         private bool m_diffrentDirection;
-        #endregion
-        #endregion
+
 
         #region Custom Methods
         public void Init(Transform _cam)

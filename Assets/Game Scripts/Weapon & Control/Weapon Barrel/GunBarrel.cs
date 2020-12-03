@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class WeaponBarrel : MonoBehaviour
+public class GunBarrel : WeaponBarrel
 {
     // Pool or Init Bullet Holder
     private Queue<BulletScript> bulletWeaponPool = new Queue<BulletScript>();
@@ -15,8 +15,8 @@ public class WeaponBarrel : MonoBehaviour
     [SerializeField] private Transform barrelTransform = null;
     [SerializeField] private float shootForce;
 
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int reservedStock;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int weaponStock;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_reservedStock;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_weaponStock;
 
     // Properties
     public int MaxCapacityWeapon 
@@ -48,24 +48,25 @@ public class WeaponBarrel : MonoBehaviour
         set 
         {
             if (value > maxReserveStock)
-                reservedStock = maxReserveStock;
+                m_reservedStock = maxReserveStock;
             else if (value < 0)
-                reservedStock = 0;
+                m_reservedStock = 0;
             else
-                reservedStock = value;
+                m_reservedStock = value;
         } 
-        get => reservedStock;
+        get => m_reservedStock;
     }
 
-    public int WeaponStock { get => weaponStock; }
+    public int WeaponStock { get => m_weaponStock; }
     public float ShootForce { get => shootForce; }
+    public Transform BarrelTransform { get => barrelTransform; }
 
     // Custom Methods
-    public void BarrelReset()
+    public override void BarrelReset()
     {
         // Reset attributes
-        weaponStock = maxWeaponStock;
-        reservedStock = maxReserveStock;
+        m_weaponStock = maxWeaponStock;
+        m_reservedStock = maxReserveStock;
 
         // Check if there's current usage and bullets in pool
         if (bulletWeaponPool.Count > maxWeaponStock)
@@ -74,7 +75,7 @@ public class WeaponBarrel : MonoBehaviour
         // Create hundreds of bullets
         for (int i = 0; i < maxWeaponStock + maxReserveStock; i++)
         {
-            BulletScript bullet = Instantiate(bulletPrefab);
+            BulletScript bullet = UnityEngine.Object.Instantiate(bulletPrefab);
             if (bullet.gameObject.activeSelf)
                 bullet.gameObject.SetActive(false);
             bulletWeaponPool.Enqueue(bullet);
@@ -86,9 +87,9 @@ public class WeaponBarrel : MonoBehaviour
     /// </summary>
     public void ReloadWeapon()
     {
-        int rangeUntilMax = maxWeaponStock - weaponStock;
-        reservedStock -= rangeUntilMax;
-        weaponStock += rangeUntilMax;
+        int rangeUntilMax = maxWeaponStock - m_weaponStock;
+        m_reservedStock -= rangeUntilMax;
+        m_weaponStock += rangeUntilMax;
     }
 
     /// <summary>
@@ -113,7 +114,7 @@ public class WeaponBarrel : MonoBehaviour
         if (!bullet.gameObject.activeSelf)
             bullet.gameObject.SetActive(true);
         bullet.transform.position = barrelTransform.position;
-        weaponStock--;
+        m_weaponStock--;
 
         return bullet;
     }

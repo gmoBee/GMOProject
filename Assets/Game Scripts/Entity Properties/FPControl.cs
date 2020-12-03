@@ -1,8 +1,10 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using VHS;
 
-namespace VHS
+public class FPControl : PlayerControl
 {
     [RequireComponent(typeof(CharacterController))]
     public class FirstPersonController : MonoBehaviour
@@ -11,6 +13,7 @@ namespace VHS
         #region Private Serialized     
         #region Data
         [Space, Header("Data")]
+        [SerializeField] private PlayerEntity entityData = null;
         [SerializeField] private MovementInputData movementInputData = null;
         [SerializeField] private HeadBobData headBobData = null;
         #endregion
@@ -88,7 +91,7 @@ namespace VHS
         [ShowIf("experimental")] [Range(1f, 100f)] [SerializeField] private float smoothInputMagnitudeSpeed = 5f;
         #endregion
         #endregion
-        
+
         #region Private Non-Serialized
         #region Components / Custom Classes / Caches
         private CharacterController m_characterController;
@@ -208,7 +211,6 @@ namespace VHS
         }
         #endregion
 
-        #region Custom Methods
         #region Initialize Methods    
         protected virtual void GetComponents()
         {
@@ -282,7 +284,7 @@ namespace VHS
         protected virtual void SmoothInputMagnitude()
         {
             m_inputVectorMagnitude = m_inputVector.magnitude;
-            m_smoothInputVectorMagnitude = Mathf.Lerp(m_smoothInputVectorMagnitude, m_inputVectorMagnitude, 
+            m_smoothInputVectorMagnitude = Mathf.Lerp(m_smoothInputVectorMagnitude, m_inputVectorMagnitude,
                 Time.deltaTime * smoothInputMagnitudeSpeed);
         }
         #endregion
@@ -360,7 +362,7 @@ namespace VHS
             m_currentSpeed = movementInputData.IsCrouching ? crouchSpeed : m_currentSpeed;
             m_currentSpeed = !movementInputData.HasInput ? 0f : m_currentSpeed;
             m_currentSpeed = movementInputData.InputVector.y == -1 ? m_currentSpeed * moveBackwardsSpeedPercent : m_currentSpeed;
-            m_currentSpeed = movementInputData.InputVector.x != 0 && movementInputData.InputVector.y == 0 ? 
+            m_currentSpeed = movementInputData.InputVector.x != 0 && movementInputData.InputVector.y == 0 ?
                 m_currentSpeed * moveSideSpeedPercent : m_currentSpeed;
         }
 
@@ -381,7 +383,7 @@ namespace VHS
         #region Crouching Methods
         protected virtual void HandleCrouch()
         {
-            if (movementInputData.CrouchClicked && m_isGrounded && m_currentSpeed < runSpeed )
+            if (movementInputData.CrouchClicked && m_isGrounded && m_currentSpeed < runSpeed)
                 InvokeCrouchRoutine();
         }
 
@@ -563,7 +565,7 @@ namespace VHS
                 if (!m_duringCrouchAnimation) // we want to make our head bob only if we are moving and not during crouch routine
                 {
                     m_headBob.ScrollHeadBob(movementInputData.IsRunning && CanRun(), movementInputData.IsCrouching, movementInputData.InputVector);
-                    m_yawTransform.localPosition = Vector3.Lerp(m_yawTransform.localPosition, 
+                    m_yawTransform.localPosition = Vector3.Lerp(m_yawTransform.localPosition,
                         (Vector3.up * m_headBob.CurrentStateHeight) + m_headBob.FinalOffset, Time.deltaTime * smoothHeadBobSpeed);
                 }
             }
@@ -651,8 +653,5 @@ namespace VHS
             transform.rotation = Quaternion.Slerp(_currentRot, _desiredRot, Time.deltaTime * smoothRotateSpeed);
         }
         #endregion
-
     }
-    #endregion
-
 }

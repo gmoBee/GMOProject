@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventHandler
+public class OnWeaponRollArgs
 {
-    
+    public OnWeaponRollArgs()
+    {
+
+    }
 }

@@ -14,5 +14,7 @@ namespace VHS
         public KeyCode interactButton;
         public KeyCode shootButton;
         public KeyCode scopeButton;
+        public KeyCode switchPrimaryButton;
+        public KeyCode switchSecondaryButton;
     }
 }

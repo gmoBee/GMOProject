@@ -7,39 +7,31 @@ namespace VHS
     [System.Serializable]
     public class CameraZoom
     {
-        #region Variables
-            #region Private Serialized
-                [Space,Header("Zoom Settings")]
-                [Range(20f,60f)] [SerializeField] private float zoomFOV = 20f;
-                [SerializeField] private AnimationCurve zoomCurve = new AnimationCurve();
-                [SerializeField] private float zoomTransitionDuration = 0f;
+        [Space,Header("Zoom Settings")]
+        [Range(20f,60f)] [SerializeField] private float zoomFOV = 20f;
+        [SerializeField] private AnimationCurve zoomCurve = new AnimationCurve();
+        [SerializeField] private float zoomTransitionDuration = 0f;
 
-                [Space,Header("Run Settings")]
-                [Range(60f,100f)] [SerializeField] private float runFOV = 60f;
-                [SerializeField] private AnimationCurve runCurve = new AnimationCurve();
-                [SerializeField] private float runTransitionDuration = 0f;
-                [SerializeField] private float runReturnTransitionDuration = 0f;
-            #endregion
+        [Space,Header("Run Settings")]
+        [Range(60f,100f)] [SerializeField] private float runFOV = 60f;
+        [SerializeField] private AnimationCurve runCurve = new AnimationCurve();
+        [SerializeField] private float runTransitionDuration = 0f;
+        [SerializeField] private float runReturnTransitionDuration = 0f;
 
-            #region Private Non Serialized
-                private float m_initFOV;
-                private CameraInputData m_camInputData;
+        // Private Non Serialized
+        private float m_initFOV;
+        private CameraInputData m_camInputData;
 
-                #region Flags
-                    private bool m_running;
-                    private bool m_zooming;
-                #endregion
+        // Flags
+        private bool m_running;
+        private bool m_zooming;
 
-                #region Components
-                    private Camera m_cam;
-                #endregion
+        // Components
+        private Camera m_cam;
 
-                #region Reference/Cache
-                    private IEnumerator m_ChangeFOVRoutine;
-                    private IEnumerator m_ChangeRunFOVRoutine;
-                #endregion
-            #endregion
-        #endregion
+        // Reference or Cache
+        private IEnumerator m_ChangeFOVRoutine;
+        private IEnumerator m_ChangeRunFOVRoutine;
 
         // Properties
         public float ZoomTransitionDuration { get => zoomTransitionDuration; }
@@ -49,6 +41,11 @@ namespace VHS
         public bool ZoomRelease { get => m_camInputData.ZoomReleased; }
     
         #region Custom Methods
+        /// <summary>
+        /// Starter function to initialize camera.
+        /// </summary>
+        /// <param name="_cam">Which camera</param>
+        /// <param name="_data">Input data</param>
         public void Init(Camera _cam, CameraInputData _data)
         {
             m_camInputData = _data;

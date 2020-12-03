@@ -8,7 +8,7 @@ public class DMR : Weapon, IGunsInterface
 {
     // Specific Weapon Attributes
     [Header("DMR Attributes")]
-    [SerializeField] private WeaponBarrel weaponBarrel = null;
+    [SerializeField] private GunBarrel gunBarrel = null;
     [SerializeField] private float reloadTime = 0f;
     [SerializeField] [Slider(1f, 100f)] private float accuracyRadius = 100;
 
@@ -32,7 +32,7 @@ public class DMR : Weapon, IGunsInterface
     protected override void OnEnable()
     {
         base.OnEnable();
-        weaponBarrel.BarrelReset();
+        gunBarrel.BarrelReset();
         cameraControl = gameObject.GetComponentInParent<CameraController>();
     }
 
@@ -53,6 +53,26 @@ public class DMR : Weapon, IGunsInterface
     protected override void OnDisable()
     {
         base.OnDisable();
+
+        if (m_shootRoutine != null)
+        {
+            StopCoroutine(m_shootRoutine);
+            m_isShooting = false;
+        }
+
+        if (m_reloadRoutine != null)
+        {
+            StopCoroutine(m_reloadRoutine);
+            m_isReloading = false;
+        }
+
+        if (m_scopeRoutine != null)
+        {
+            StopCoroutine(m_scopeRoutine);
+            transform.localPosition = normalPhysicPosition;
+            HideMesh(false);
+            m_isScoping = false;
+        }
     }
     #endregion
 
@@ -76,7 +96,7 @@ public class DMR : Weapon, IGunsInterface
 
     public void Reload()
     {
-        if (m_isReloading || weaponBarrel.WeaponStock >= weaponBarrel.MaxCapacityWeapon)
+        if (m_isReloading || gunBarrel.WeaponStock >= gunBarrel.MaxCapacityWeapon)
             return;
 
         if (m_scopeRoutine != null)
@@ -104,11 +124,11 @@ public class DMR : Weapon, IGunsInterface
             if (fireRateHolder <= 0f)
             {
                 // Shoot Bullet
-                BulletScript bullet = weaponBarrel.ReleaseBullet();
+                BulletScript bullet = gunBarrel.ReleaseBullet();
                 Vector3 shootDir = (weaponInputData.CrosshairTargetPos - bullet.transform.position).normalized;
-                bullet.StartShoot(shootDir, targetHitLayer, weaponBarrel.ShootForce);
+                bullet.StartShoot(shootDir, targetHitLayer, gunBarrel.ShootForce);
 
-                if (weaponBarrel.WeaponStock <= 0)
+                if (gunBarrel.WeaponStock <= 0)
                 {
                     Reload();
                     break;
@@ -182,7 +202,7 @@ public class DMR : Weapon, IGunsInterface
             yield return null;
         }
 
-        weaponBarrel.ReloadWeapon();
+        gunBarrel.ReloadWeapon();
         m_isReloading = false;
     }
 

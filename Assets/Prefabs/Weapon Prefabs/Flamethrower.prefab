@@ -1975,6 +1975,36 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &8220647236935559578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8220647236935559573}
+  m_Layer: 0
+  m_Name: Barrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8220647236935559573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8220647236935559578}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 14.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4886970765449687382}
+  m_RootOrder: 27
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8469401575667663685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1985,8 +2015,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4886970765449687382}
   - component: {fileID: 313899417481549632}
+  - component: {fileID: 3164740923337230510}
   m_Layer: 0
-  m_Name: flame
+  m_Name: Flamethrower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1999,7 +2030,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8469401575667663685}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.416, y: -0.20359993, z: 0.2715}
   m_LocalScale: {x: 0.06769547, y: 0.06769547, z: 0.06769547}
   m_Children:
@@ -2046,28 +2077,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64f2bdaa273b66e4a93cadaff623e33b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairTemplate: {fileID: 0}
-  weaponInputData: {fileID: 11400000, guid: 58abd0f8023f21345b70020f21c2cdeb, type: 2}
+  crosshairTemplate:
+    uiTemplatePrefab: {fileID: 0}
+    uiPlaceholder: {fileID: 0}
+  weaponInputData: {fileID: 0}
+  fireRate: 0.25
+  damageRate: 5
   targetHitLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   normalFireRate:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  fireRate: 1
-  damageRate: 5
-  maxAmmo: 0
-  reloadTime: 0
-  gunBarrel: {fileID: 1684713482645538472}
-  shootForce: 10
-  ammo: 0
-  weaponShooting: 0
-  weaponReloading: 0
-  maxBurnRange: 1
-  intensity: 0.5
+  fuelBarrel: {fileID: 3164740923337230510}
+  fuelUsePerSeconds: 2
+  fuelRecoverPerSec: 1
+  maxBurnRange: 2
+  intensity: 1
+  wideRadius: 2
+  fireParticle: {fileID: 0}
+  m_isFlameActive: 0
+  m_isRefueling: 0
+  m_overheatTimeleft: 0
+--- !u!114 &3164740923337230510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8469401575667663685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7956a18ae47de641b0d24d7266b8e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxFuel: 75
+  overheatCooldown: 2.5
+  barrelTransform: {fileID: 8220647236935559573}
+  m_currentFuel: 0
 --- !u!1 &8557357501638916591
 GameObject:
   m_ObjectHideFlags: 0
@@ -2226,78 +2294,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!1001 &1405486687633193846
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 4886970765449687382}
-    m_Modifications:
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 14.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 27
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7031475443316134636, guid: facda67353e066e4c826478203cfbc27,
-        type: 3}
-      propertyPath: m_Name
-      value: AmmoBarrel
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: facda67353e066e4c826478203cfbc27, type: 3}
---- !u!4 &8220647236935559573 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7031475443316134627, guid: facda67353e066e4c826478203cfbc27,
-    type: 3}
-  m_PrefabInstance: {fileID: 1405486687633193846}
-  m_PrefabAsset: {fileID: 0}

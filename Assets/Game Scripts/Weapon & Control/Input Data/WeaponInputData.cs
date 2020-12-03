@@ -8,6 +8,10 @@ public class WeaponInputData : ScriptableObject
     #region Data
     Vector2 m_crosshairTargetScreenPos;
     Vector3 m_crosshairTargetPos;
+
+    bool m_changePrimary;
+    bool m_changeSecondary;
+
     bool m_shootClicked;
     bool m_isShooting;
     bool m_shootReleased;
@@ -27,6 +31,18 @@ public class WeaponInputData : ScriptableObject
     {
         get => m_crosshairTargetScreenPos;
         set => m_crosshairTargetScreenPos = value;
+    }
+
+    public bool ChangePrimary
+    {
+        get => m_changePrimary;
+        set => m_changePrimary = value;
+    }
+
+    public bool ChangeSecondary
+    {
+        get => m_changeSecondary;
+        set => m_changeSecondary = value;
     }
 
     public bool ShootClicked
@@ -65,6 +81,8 @@ public class WeaponInputData : ScriptableObject
     {
         m_crosshairTargetScreenPos = Vector2.zero;
         m_crosshairTargetPos = Vector3.zero;
+        m_changePrimary = false;
+        m_changeSecondary = false;
         m_isHolding = false;
         m_isShooting = false;
         m_isReloading = false;
