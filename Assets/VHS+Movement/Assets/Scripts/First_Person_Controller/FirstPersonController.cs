@@ -11,7 +11,6 @@ namespace VHS
         #region Private Serialized     
         #region Data
         [Space, Header("Data")]
-        [SerializeField] private WeaponInputData weaponInputData = null;
         [SerializeField] private MovementInputData movementInputData = null;
         [SerializeField] private HeadBobData headBobData = null;
         #endregion
@@ -22,7 +21,7 @@ namespace VHS
         [SerializeField] private float walkSpeed = 2f;
         [SerializeField] private float runSpeed = 3f;
         [SerializeField] private float jumpSpeed = 5f;
-        [SerializeField] private float slideSpeed = 7f; // added vby GMO_Bee
+        [SerializeField] private float slideSpeed = 7f;
         [Slider(0f, 1f)] [SerializeField] private float moveBackwardsSpeedPercent = 0.5f;
         [Slider(0f, 1f)] [SerializeField] private float moveSideSpeedPercent = 0.75f;
         #endregion
@@ -88,7 +87,6 @@ namespace VHS
         [Tooltip("If set to very high it will stop player immediately after releasing input, otherwise it just another smoothing to our movement to make our player not move fast immediately and not stop immediately")]
         [ShowIf("experimental")] [Range(1f, 100f)] [SerializeField] private float smoothInputMagnitudeSpeed = 5f;
         #endregion
-
         #endregion
         
         #region Private Non-Serialized

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3843716869363435366}
   - component: {fileID: 3843716869363435367}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Camera_Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,33 +46,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camInputData: {fileID: 11400000, guid: 91ebd8974cbf1964f86a0e8b5e93ed5c, type: 2}
   cameraZoom:
-    zoomFOV: 40
+    zoomFOV: 45
     zoomCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    zoomTransitionDuration: 0.25
-    runFOV: 70
+    zoomTransitionDuration: 1
+    runFOV: 75
     runCurve:
       serializedVersion: 2
       m_Curve:
@@ -83,8 +83,8 @@ MonoBehaviour:
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
@@ -92,45 +92,45 @@ MonoBehaviour:
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    runTransitionDuration: 0.75
-    runReturnTransitionDuration: 0.5
+    runTransitionDuration: 1
+    runReturnTransitionDuration: 1
   cameraSway:
     swayAmount: 1
     swaySpeed: 1
-    returnSpeed: 3
-    changeDirectionMultiplier: 4
+    returnSpeed: 1
+    changeDirectionMultiplier: 1
     swayCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 2.6845634
-        outSlope: 2.6845634
-        tangentMode: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.055934515
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      m_PreInfinity: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  sensitivity: {x: 100, y: 100}
-  smoothAmount: {x: 5, y: 5}
-  lookAngleMinMax: {x: -90, y: 90}
+  sensitivity: {x: 240, y: 240}
+  smoothAmount: {x: 20, y: 20}
+  lookAngleMinMax: {x: -85, y: 85}
 --- !u!1 &3843716869417167139
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3843716869417167136}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Camera_Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 3843716870190975471}
   - component: {fileID: 3843716870190975465}
   - component: {fileID: 3843716870190975470}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -191,7 +191,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1241183461548921860}
   m_Father: {fileID: 3843716869417167136}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -218,7 +219,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -261,7 +262,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 597a28d614f0e2a449871720112bf46b, type: 2}
   x: 1
   y: 1
-  z: 0
+  z: 1
 --- !u!1 &3843716870331872631
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,9 +276,10 @@ GameObject:
   - component: {fileID: 3843716870331872628}
   - component: {fileID: 3843716870331872635}
   - component: {fileID: 3843716870331872632}
-  m_Layer: 0
+  - component: {fileID: 1395508998}
+  m_Layer: 10
   m_Name: P_First_Person_Controller
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -290,7 +292,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3843716870331872631}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 43.780636, y: 2.2930565, z: 33.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3843716869363435366}
@@ -327,17 +329,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0217791945a1064fbd0a34d70bdee8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponInputData: {fileID: 11400000, guid: 58abd0f8023f21345b70020f21c2cdeb, type: 2}
   movementInputData: {fileID: 11400000, guid: abad080c0665fdc4cb00444da1f990a9, type: 2}
   headBobData: {fileID: 11400000, guid: fd51ede42cc20a04da93c2d2fac1e05c, type: 2}
-  crouchSpeed: 2
-  walkSpeed: 4.4
-  runSpeed: 6
-  jumpSpeed: 6
+  crouchSpeed: 1
+  walkSpeed: 2
+  runSpeed: 3
+  jumpSpeed: 5
   slideSpeed: 7
   moveBackwardsSpeedPercent: 0.5
-  moveSideSpeedPercent: 0.7
-  canRunThreshold: 0.7
+  moveSideSpeedPercent: 0.75
+  canRunThreshold: 0.8
   runTransitionCurve:
     serializedVersion: 2
     m_Curve:
@@ -348,17 +349,17 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -366,7 +367,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   crouchPercent: 0.6
-  crouchTransitionDuration: 0.5
+  crouchTransitionDuration: 1
   crouchTransitionCurve:
     serializedVersion: 2
     m_Curve:
@@ -377,8 +378,8 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
@@ -386,31 +387,31 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slidePercent: 0.5
-  slideTransitionDuration: 0.5
+  slidePercent: 0.6
+  slideTransitionDuration: 1
   slideTransitionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -418,33 +419,24 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   lowLandAmount: 0.1
-  highLandAmount: 0.4
+  highLandAmount: 0.6
   landTimer: 0.5
-  landDuration: 0.5
+  landDuration: 1
   landCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: -6.524011
-      outSlope: -6.524011
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.02928031
-    - serializedVersion: 3
-      time: 0.2
-      value: -1
-      inSlope: -0.42737108
-      outSlope: -0.42737108
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -455,21 +447,21 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   gravityMultiplier: 2.5
-  stickToGroundForce: 1
+  stickToGroundForce: 5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 4294967295
   rayLength: 0.1
-  raySphereRadius: 0.2
+  raySphereRadius: 0.1
   obstacleLayers:
     serializedVersion: 2
-    m_Bits: 513
-  rayObstacleLength: 0.4
-  rayObstacleSphereRadius: 0.2
-  smoothRotateSpeed: 10
-  smoothInputSpeed: 10
-  smoothVelocitySpeed: 3
-  smoothFinalDirectionSpeed: 10
+    m_Bits: 4294967295
+  rayObstacleLength: 0.1
+  rayObstacleSphereRadius: 0.1
+  smoothRotateSpeed: 5
+  smoothInputSpeed: 5
+  smoothVelocitySpeed: 5
+  smoothFinalDirectionSpeed: 5
   smoothHeadBobSpeed: 5
   experimental: 0
   smoothInputMagnitudeSpeed: 5
@@ -515,11 +507,11 @@ MonoBehaviour:
     type: 2}
   interactionData: {fileID: 11400000, guid: 229de2e6b9a896344928fb2041804439, type: 2}
   uiPanel: {fileID: 0}
-  rayDistance: 5
-  raySphereRadius: 0.3
+  rayDistance: 0
+  raySphereRadius: 0
   interactableLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
 --- !u!114 &3843716870331872632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,8 +524,111 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d95a60a4f97dd8408e783d47bb78e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponInputData: {fileID: 11400000, guid: 58abd0f8023f21345b70020f21c2cdeb, type: 2}
+  inputMap:
+    reloadButton: 114
+    jumpButton: 32
+    runButton: 304
+    crouchButton: 99
+    slideButton: 306
+    interactButton: 101
+    shootButton: 323
+    scopeButton: 324
+  weaponInputData: {fileID: 11400000, guid: 86afc7357fcf9ce47837447acc07cd69, type: 2}
   cameraInputData: {fileID: 11400000, guid: 91ebd8974cbf1964f86a0e8b5e93ed5c, type: 2}
   movementInputData: {fileID: 11400000, guid: abad080c0665fdc4cb00444da1f990a9, type: 2}
   interactionInputData: {fileID: 11400000, guid: 53d9f3696d1130146ae3edd77cffcd05,
     type: 2}
+--- !u!114 &1395508998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3843716870331872631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e850d64444d59b4b986dcfe963c01ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponInputData: {fileID: 11400000, guid: 86afc7357fcf9ce47837447acc07cd69, type: 2}
+  maxHealth: 100
+  maxOxygenLvl: 100
+  holdingOnHand: {fileID: 0}
+  m_currentOxygenLvl: 0
+  m_currentHealth: 0
+  m_personControlTransform: {fileID: 0}
+--- !u!1001 &5975031838927643986
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3843716870190975468}
+    m_Modifications:
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.416
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.20359993
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.2715
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8469401575667663685, guid: 04eb5a7d133667347b055f2be679d3a4,
+        type: 3}
+      propertyPath: m_Name
+      value: Flamethrower
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 04eb5a7d133667347b055f2be679d3a4, type: 3}
+--- !u!4 &1241183461548921860 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4886970765449687382, guid: 04eb5a7d133667347b055f2be679d3a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 5975031838927643986}
+  m_PrefabAsset: {fileID: 0}
