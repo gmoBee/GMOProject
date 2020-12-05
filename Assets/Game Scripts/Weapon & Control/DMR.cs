@@ -48,6 +48,9 @@ public class DMR : Weapon, IGunsInterface
         }
         if (weaponInputData.IsReloading)
             Reload();
+
+        // Handle detection on object
+        DetectorHandler();
     }
 
     protected override void OnDisable()
@@ -109,6 +112,28 @@ public class DMR : Weapon, IGunsInterface
         StartCoroutine(m_reloadRoutine);
     }
 
+    /// <summary>
+    /// Only used for changing crosshair when detect an enemy.
+    /// </summary>
+    private void DetectorHandler()
+    {
+        Ray crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+        Debug.DrawLine(crosshairRay.origin, crosshairRay.origin + crosshairRay.direction, Color.red);
+        RaycastHit hit;
+        if (Physics.Raycast(crosshairRay, out hit))
+        {
+
+            if (m_isScoping || !targetTags.Contains(hit.collider.tag))
+                crosshairTemplate.CrosshairDetect(false);
+            else
+                crosshairTemplate.CrosshairDetect(true);
+        }
+        else
+        {
+            crosshairTemplate.CrosshairDetect(false);
+        }
+    }
+
     private IEnumerator ShootRoutine()
     {
         m_isShooting = true;
@@ -126,7 +151,8 @@ public class DMR : Weapon, IGunsInterface
                 // Shoot Bullet
                 BulletScript bullet = gunBarrel.ReleaseBullet();
                 Vector3 shootDir = (weaponInputData.CrosshairTargetPos - bullet.transform.position).normalized;
-                bullet.StartShoot(shootDir, targetHitLayer, gunBarrel.ShootForce);
+                bullet.StartShoot(shootDir, targetTags, gunBarrel.ShootForce);
+                StartCoroutine(ShootlightPass());
 
                 if (gunBarrel.WeaponStock <= 0)
                 {
@@ -204,6 +230,16 @@ public class DMR : Weapon, IGunsInterface
 
         gunBarrel.ReloadWeapon();
         m_isReloading = false;
+    }
+
+    /// <summary>
+    /// Light came out after shoot for 1 frame.
+    /// </summary>
+    private IEnumerator ShootlightPass()
+    {
+        shootLight.enabled = true;
+        yield return null;
+        shootLight.enabled = false;
     }
 
     private void HideMesh(bool hide)

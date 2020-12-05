@@ -9,7 +9,8 @@ public abstract class Weapon : MonoBehaviour
 {
     // Template and Data
     [Header("Template and Data")]
-    [SerializeField] private CrosshairTemplate crosshairTemplate = null;
+    [SerializeField] protected CrosshairTemplate crosshairTemplate = null;
+    [Space]
     [SerializeField] [ReadOnly] protected WeaponInputData weaponInputData = null;
 
     // Weapon Attributes
@@ -17,8 +18,9 @@ public abstract class Weapon : MonoBehaviour
     [Slider(0.1f, 5f)] [SerializeField] private float fireRate = 1f;
     [SerializeField] private WeaponClass weaponClass = WeaponClass.Primary;
     [SerializeField] private float damageRate = 5f;
-    [SerializeField] protected LayerMask targetHitLayer;
+    [SerializeField] protected List<string> targetTags;
     [SerializeField] protected AnimationCurve normalFireRate = new AnimationCurve();
+    [SerializeField] protected Light shootLight = null;
 
     // Properties
     public float FireRate { set { fireRate = value; } get { return fireRate; } }
@@ -30,6 +32,7 @@ public abstract class Weapon : MonoBehaviour
     protected virtual void OnEnable()
     {
         weaponInputData = GetComponentInParent<PlayerEntity>().WInputData;
+        crosshairTemplate.InitCrosshair();
     }
 
     protected abstract void Update();
@@ -37,5 +40,6 @@ public abstract class Weapon : MonoBehaviour
     protected virtual void OnDisable()
     {
         weaponInputData = null;
+        crosshairTemplate.DestroyCrosshair();
     }
 }
