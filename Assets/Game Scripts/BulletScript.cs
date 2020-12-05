@@ -8,12 +8,12 @@ public class BulletScript : MonoBehaviour
     [Header("Default Bullet Attributes")]
     [SerializeField] private float moveSpeed; // Bullet shoot with speed
     [SerializeField] private float fadingSeconds; // Destroy bullet, prevent infinite movement
-    [SerializeField] private LayerMask targetMask;
+    [SerializeField] private List<string> targetTags;
 
     // Temporary Attributes
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private Vector3 dir;
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private Rigidbody bulletRigid;
-    [BoxGroup("Temporary Attributes")] [SerializeField] [ReadOnly] private LayerMask targetMaskHolder;
+    [BoxGroup("Temporary Attributes")] [SerializeField] [ReadOnly] private List<string> targetTagsHolder;
     [BoxGroup("Temporary Attributes")] [SerializeField] [ReadOnly] private float speedHolder;
 
     // Only for returning bullet to pool
@@ -25,7 +25,7 @@ public class BulletScript : MonoBehaviour
         if (bulletRigid == null)
             bulletRigid = GetComponent<Rigidbody>();
 
-        targetMaskHolder = targetMask;
+        targetTagsHolder = targetTags;
         speedHolder = moveSpeed;
     }
 
@@ -54,18 +54,18 @@ public class BulletScript : MonoBehaviour
             gameObject.SetActive(true);
         // Assign temporary attributes
         this.dir = dir;
-        targetMaskHolder = targetMask;
+        targetTagsHolder = targetTags;
         speedHolder = moveSpeed;
         StartCoroutine(BulletDisappear());
     }
 
-    public void StartShoot(Vector3 dir, LayerMask tm, float speed)
+    public void StartShoot(Vector3 dir, List<string> targetTags, float speed)
     {
         if (!gameObject.activeSelf)
             gameObject.SetActive(true);
 
         this.dir = dir;
-        targetMaskHolder = tm;
+        targetTagsHolder = targetTags;
         speedHolder = speed;
         StartCoroutine(BulletDisappear());
     }

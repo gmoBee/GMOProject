@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Flamethrower : Weapon
 {
@@ -15,7 +16,7 @@ public class Flamethrower : Weapon
     [Slider(1f, 10f)] [SerializeField] private float maxBurnRange = 1f;
     [Slider(0.1f, 10f)] [SerializeField] private float intensity = 0.5f;
     [SerializeField] private float wideRadius = 1f;
-    [SerializeField] private ParticleSystem fireParticle = null;
+    [SerializeField] private VisualEffect flameVisualEffect = null;
 
     private IEnumerator m_burnRoutine;
     private IEnumerator m_refuelRoutine;
@@ -30,6 +31,7 @@ public class Flamethrower : Weapon
     {
         base.OnEnable();
         fuelBarrel.BarrelReset();
+        flameVisualEffect.Stop();
     }
 
     protected override void Update()
@@ -49,6 +51,7 @@ public class Flamethrower : Weapon
         {
             StopCoroutine(m_burnRoutine);
             m_isFlameActive = false;
+            flameVisualEffect.Stop();
         }
 
         if (m_refuelRoutine != null)
@@ -106,6 +109,10 @@ public class Flamethrower : Weapon
         m_isFlameActive = true;
         float fireRateHolder = 0f;
 
+        // Play VFX and lighting
+        shootLight.enabled = true;
+        flameVisualEffect.Play();
+
         while (fuelBarrel.CurrentFuel > 0f)
         {
             // Drink fuel
@@ -119,7 +126,7 @@ public class Flamethrower : Weapon
                 Vector3 flameDir = (weaponInputData.CrosshairTargetPos - barrelOrigin).normalized;
                 barrelOrigin += flameDir * wideRadius; 
 
-                RaycastHit[] hits = Physics.SphereCastAll(barrelOrigin, wideRadius, flameDir, maxBurnRange, targetHitLayer);
+                RaycastHit[] hits = Physics.SphereCastAll(barrelOrigin, wideRadius, flameDir, maxBurnRange);
                 Debug.DrawRay(barrelOrigin, flameDir * maxBurnRange);
 
                 foreach (RaycastHit hit in hits)
@@ -127,8 +134,12 @@ public class Flamethrower : Weapon
                     // if it detects self fire then ignore hit
                     if (hit.transform.Equals(transform.root))
                         continue;
-                    Debug.Log(hit.collider.name);
-                    Debug.DrawLine(barrelOrigin, hit.point);
+
+                    if (targetTags.Contains(hit.collider.tag))
+                    {
+                        Debug.Log(hit.collider.name);
+                        Debug.DrawLine(barrelOrigin, hit.point);
+                    }
                 }
                 
                 fireRateHolder = FireRate;
@@ -144,6 +155,10 @@ public class Flamethrower : Weapon
     private IEnumerator RefuelRoutine()
     {
         m_isRefueling = true;
+
+        // Stop VFX and lighting
+        flameVisualEffect.Stop();
+        shootLight.enabled = false;
 
         // Keep the cooldown running when flamethrower is running out
         if (fuelBarrel.CurrentFuel > 0f)
