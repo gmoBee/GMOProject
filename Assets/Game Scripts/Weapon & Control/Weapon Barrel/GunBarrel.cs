@@ -10,10 +10,10 @@ public class GunBarrel : WeaponBarrel
 
     // Weapon Barrel Attributes
     [SerializeField] private BulletScript bulletPrefab = null;
-    [SerializeField] private int maxWeaponStock;
-    [SerializeField] private int maxReserveStock;
+    [SerializeField] private int maxWeaponStock = 10;
+    [SerializeField] private int maxReserveStock = 30;
     [SerializeField] private Transform barrelTransform = null;
-    [SerializeField] private float shootForce;
+    [SerializeField] private float shootForce = 30f;
 
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_reservedStock;
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_weaponStock;

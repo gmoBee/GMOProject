@@ -16,6 +16,7 @@ namespace VHS
             slideButton = KeyCode.LeftControl,
             shootButton = KeyCode.Mouse0, 
             scopeButton = KeyCode.Mouse1, 
+            useAbility = KeyCode.X,
             switchPrimaryButton = KeyCode.Alpha1,
             switchSecondaryButton = KeyCode.Alpha2
         };
@@ -93,6 +94,8 @@ namespace VHS
 
             if (movementInputData.SlideReleased)
                 movementInputData.IsSliding = false;
+
+            movementInputData.AbilityPressed = Input.GetKeyDown(inputMap.useAbility);
         }
 
         void GetWeaponInputData()

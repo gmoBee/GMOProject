@@ -18,8 +18,8 @@ public class DMR : Weapon, IGunsInterface
     private IEnumerator m_reloadRoutine = null;
 
     // Scoping Section
-    [BoxGroup("Scope Reference")] [SerializeField] private Vector3 scopePhysicPosition;
-    [BoxGroup("Scope Reference")] [SerializeField] private Vector3 normalPhysicPosition;
+    [BoxGroup("Scope Reference")] [SerializeField] private Vector3 scopePhysicPosition = new Vector3();
+    [BoxGroup("Scope Reference")] [SerializeField] private Vector3 normalPhysicPosition = new Vector3();
     [BoxGroup("Scope Reference")] [SerializeField] [ReadOnly] private CameraController cameraControl;
 
     // Debugging Section
@@ -33,6 +33,7 @@ public class DMR : Weapon, IGunsInterface
     {
         base.OnEnable();
         gunBarrel.BarrelReset();
+        genericBarrel = gunBarrel;
         cameraControl = gameObject.GetComponentInParent<CameraController>();
     }
 
@@ -115,7 +116,7 @@ public class DMR : Weapon, IGunsInterface
     /// <summary>
     /// Only used for changing crosshair when detect an enemy.
     /// </summary>
-    private void DetectorHandler()
+    protected override void DetectorHandler()
     {
         Ray crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
         Debug.DrawLine(crosshairRay.origin, crosshairRay.origin + crosshairRay.direction, Color.red);

@@ -22,16 +22,16 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected AnimationCurve normalFireRate = new AnimationCurve();
     [SerializeField] protected Light shootLight = null;
 
+    protected WeaponBarrel genericBarrel = null;
+
     // Properties
     public float FireRate { set { fireRate = value; } get { return fireRate; } }
     public float DamageRate { set { damageRate = value; } get { return damageRate; } }
-    public WeaponInputData InputData { set { weaponInputData = value; } }
     public WeaponClass WeaponClassification { get => weaponClass; }
 
     // Unity Built-In Methods
     protected virtual void OnEnable()
     {
-        weaponInputData = GetComponentInParent<PlayerEntity>().WInputData;
         crosshairTemplate.InitCrosshair();
     }
 
@@ -39,7 +39,14 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        weaponInputData = null;
+        if (weaponInputData != null)
+            weaponInputData = null;
         crosshairTemplate.DestroyCrosshair();
+    }
+
+    protected abstract void DetectorHandler();
+    public void setInputData(WeaponInputData dat)
+    {
+        weaponInputData = dat;
     }
 }

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-interface IEntityInterface
+public class GameEventHandler : MonoBehaviour
 {
-    void Hit(int damage);
-    void Heal(int amount);
+    
 }

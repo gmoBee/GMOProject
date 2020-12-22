@@ -31,6 +31,7 @@ public class Flamethrower : Weapon
     {
         base.OnEnable();
         fuelBarrel.BarrelReset();
+        genericBarrel = fuelBarrel;
         flameVisualEffect.Stop();
     }
 
@@ -103,7 +104,18 @@ public class Flamethrower : Weapon
         m_refuelRoutine = RefuelRoutine();
         StartCoroutine(m_refuelRoutine);
     }
-         
+
+    protected override void DetectorHandler()
+    {
+        Ray crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+        Debug.DrawLine(crosshairRay.origin, crosshairRay.origin + crosshairRay.direction, Color.red);
+        RaycastHit hit;
+        if (Physics.Raycast(crosshairRay, out hit))
+            crosshairTemplate.CrosshairDetect(true);
+        else
+            crosshairTemplate.CrosshairDetect(false);
+    }
+
     private IEnumerator BurningRoutine()
     {
         m_isFlameActive = true;

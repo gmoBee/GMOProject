@@ -16,7 +16,6 @@ public class WeaponInputData : ScriptableObject
     bool m_isShooting;
     bool m_shootReleased;
 
-    bool m_isHolding;
     bool m_isReloading;
     #endregion
 
@@ -63,12 +62,6 @@ public class WeaponInputData : ScriptableObject
         set => m_shootReleased = value;
     }
 
-    public bool IsHolding
-    {
-        get => m_isHolding;
-        set => m_isHolding = value;
-    }
-
     public bool IsReloading
     {
         get => m_isReloading;
@@ -83,7 +76,6 @@ public class WeaponInputData : ScriptableObject
         m_crosshairTargetPos = Vector3.zero;
         m_changePrimary = false;
         m_changeSecondary = false;
-        m_isHolding = false;
         m_isShooting = false;
         m_isReloading = false;
     }

@@ -1,124 +1,90 @@
-﻿using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
+using NaughtyAttributes;
 using VHS;
 
-public class PlayerEntity : MonoBehaviour, IEntityInterface
+[RequireComponent(typeof(PlayerControl))]
+public class PlayerEntity : LivingEntity
 {
-    [System.Serializable]
-    public struct OwnedWeapons
-    {
-        // List of weapon holder
-        [SerializeField] private Weapon holdingOnHand;
-        [SerializeField] private Weapon primaryWeapon;
-        [SerializeField] private Weapon secondaryWeapon;
-
-        public Weapon HoldOnHand
-        {
-            set => holdingOnHand = value;
-            get => holdingOnHand;
-        }
-
-        public Weapon PrimaryWeapon
-        {
-            set => primaryWeapon = value;
-            get => primaryWeapon;
-        }
-
-        public Weapon SecondaryWeapon
-        {
-            set => secondaryWeapon = value;
-            get => secondaryWeapon;
-        }
-    }
-
     // Datas
-    [Header("Data")]
-    [SerializeField] private WeaponInputData weaponInputData = null;
-    [SerializeField] private PlayerControl playerController = null;
+    [Header("Player Attributes")]
+    [SerializeField] [ReadOnly] private PlayerControl playerController = null;
 
+    private IEnumerator m_weaponRollRoutine;
 
-    // All Properties are here
-    [Space, Header("Player Properties", order = 0)]
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private int maxOxygenLvl = 100;
-
-    // Weapon Holder
-    [Space]
-    [SerializeField] protected OwnedWeapons ownedWeapons = new OwnedWeapons();
-
-    // Debugger
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_currentOxygenLvl;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private int m_currentHealth;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private FirstPersonController m_personControlTransform;
-
-
-    // Properties
-    public WeaponInputData WInputData { get => weaponInputData; }
-
+    public PlayerControl Controller { get => playerController; }
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool isChangingWeapon = false;
 
     #region Unity BuiltIn Methods
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-        // Get self components by initializing player
-        m_personControlTransform = gameObject.GetComponent<FirstPersonController>();
-        m_currentHealth = maxHealth;
-        m_currentOxygenLvl = maxOxygenLvl;
+        // Run parent function
+        base.Start();
+        playerController = GetComponent<PlayerControl>();
+        OnHandInit(ownedWeapons.PrimaryWeapon);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Handle player wants to change weapon
         HandleRollingWeapon();
+
+        // Handle player wants to use ability
+        if (playerController.MInputData.AbilityPressed && useAbilityAction != null)
+            useAbilityAction();
     }
     #endregion
 
-    public void Heal(int amount)
+    private void HandleRollingWeapon()
     {
-        // Heal player health
-    }
+        // Check if currently rolling weapon
+        if (m_weaponRollRoutine != null)
+            return;
 
-    public void Hit(int damage)
-    {
-        // Hit player with damage
-    }
-
-    public void HandleRollingWeapon()
-    {
         // Change weapon to primary
-        if (weaponInputData.ChangePrimary)
+        if (playerController.WInputData.ChangePrimary)
         {
-            Debug.Log("Weapon change to primary");
-            if (ownedWeapons.PrimaryWeapon == null)
+            if (ownedWeapons.PrimaryWeapon == null || ownedWeapons.HoldOnHand.Equals(ownedWeapons.PrimaryWeapon))
                 return;
 
-            if (ownedWeapons.HoldOnHand.Equals(ownedWeapons.PrimaryWeapon))
-                return;
-
-            if (ownedWeapons.HoldOnHand != null)
-                ownedWeapons.HoldOnHand.gameObject.SetActive(false);
-            ownedWeapons.HoldOnHand = ownedWeapons.PrimaryWeapon;
-            ownedWeapons.HoldOnHand.gameObject.SetActive(true);
-            Debug.Log("Weapon changed Successfully");
+            OnHandInit(ownedWeapons.PrimaryWeapon);
         }
 
         // Change weapon to secondary
-        if (weaponInputData.ChangeSecondary)
+        if (playerController.WInputData.ChangeSecondary)
         {
-            Debug.Log("Weapon change to secondary");
-            if (ownedWeapons.SecondaryWeapon == null)
+            if (ownedWeapons.SecondaryWeapon == null || ownedWeapons.HoldOnHand.Equals(ownedWeapons.SecondaryWeapon))
                 return;
 
-            if (ownedWeapons.HoldOnHand.Equals(ownedWeapons.SecondaryWeapon))
-                return;
-
-            if (ownedWeapons.HoldOnHand != null)
-                ownedWeapons.HoldOnHand.gameObject.SetActive(false);
-            ownedWeapons.HoldOnHand = ownedWeapons.SecondaryWeapon;
-            ownedWeapons.HoldOnHand.gameObject.SetActive(true);
-            Debug.Log($"Weapon changed Successfully to {ownedWeapons.HoldOnHand.gameObject.name}");
+            OnHandInit(ownedWeapons.SecondaryWeapon);
         }
+    }
+
+    private void OnHandInit(Weapon handle)
+    {
+        // Close previous weapon
+        if (ownedWeapons.HoldOnHand != null)
+            ownedWeapons.HoldOnHand.gameObject.SetActive(false);
+
+        // Handle on hand with new one
+        // TODO: Connect with animation
+        ownedWeapons.HoldOnHand = handle;
+        if (ownedWeapons.HoldOnHand != null)
+        {
+            ownedWeapons.HoldOnHand.setInputData(playerController.WInputData);
+            ownedWeapons.HoldOnHand.gameObject.SetActive(true);
+        }
+    }
+
+    private IEnumerator WeaponRollRoutine()
+    {
+        isChangingWeapon = true;
+
+        // TODO: Change Weapon animation
+        yield return null;
+
+        isChangingWeapon = false;
     }
 }

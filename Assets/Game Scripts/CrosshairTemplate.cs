@@ -9,36 +9,36 @@ public class CrosshairTemplate
 
     // Other stuff you need for crosshair templates
     [Header("UIs")]
-    [SerializeField] private RectTransform crosshairPrefab = null;
+    [SerializeField] private RectTransform crosshairDefaultPrefab = null;
     [SerializeField] private RectTransform crosshairScopingPrefab = null;
     [SerializeField] private RectTransform crosshairDetectPrefab = null;
 
-    private RectTransform m_templateHolder;
-    private RectTransform m_detectHolder;
-    private RectTransform m_scopeHolder;
+    private GameObject m_templateHolder;
+    private GameObject m_detectHolder;
+    private GameObject m_scopeHolder;
 
     public void InitCrosshair()
     {
         // Check all templates are set
-        if (crosshairPrefab != null)
+        if (crosshairDefaultPrefab != null)
         {
-            m_templateHolder = Object.Instantiate(crosshairPrefab, placeholder);
-            if (!m_templateHolder.gameObject.activeSelf)
-                m_templateHolder.gameObject.SetActive(true);
+            m_templateHolder = Object.Instantiate(crosshairDefaultPrefab, placeholder).gameObject;
+            if (!m_templateHolder.activeSelf)
+                m_templateHolder.SetActive(true);
         }
 
         if (crosshairScopingPrefab != null)
         {
-            m_scopeHolder = Object.Instantiate(crosshairScopingPrefab, placeholder);
-            if (m_scopeHolder.gameObject.activeSelf)
-                m_scopeHolder.gameObject.SetActive(false);
+            m_scopeHolder = Object.Instantiate(crosshairScopingPrefab, placeholder).gameObject;
+            if (m_scopeHolder.activeSelf)
+                m_scopeHolder.SetActive(false);
         }
 
         if (crosshairDetectPrefab != null)
         {
-            m_detectHolder = Object.Instantiate(crosshairDetectPrefab, placeholder);
-            if (m_detectHolder.gameObject.activeSelf)
-                m_detectHolder.gameObject.SetActive(false);
+            m_detectHolder = Object.Instantiate(crosshairDetectPrefab, placeholder).gameObject;
+            if (m_detectHolder.activeSelf)
+                m_detectHolder.SetActive(false);
         }
     }
 
@@ -46,11 +46,11 @@ public class CrosshairTemplate
     {
         // Destroy all UI
         if (m_templateHolder != null)
-            Object.Destroy(m_templateHolder.gameObject);
+            Object.Destroy(m_templateHolder);
         if (m_detectHolder != null)
-            Object.Destroy(m_detectHolder.gameObject);
+            Object.Destroy(m_detectHolder);
         if (m_scopeHolder != null)
-            Object.Destroy(m_scopeHolder.gameObject);
+            Object.Destroy(m_scopeHolder);
     }
 
     public void CrosshairDetect(bool isDetected)
@@ -60,17 +60,17 @@ public class CrosshairTemplate
 
         if (isDetected)
         {
-            if (m_templateHolder.gameObject.activeSelf)
-                m_templateHolder.gameObject.SetActive(false);
-            if (!m_detectHolder.gameObject.activeSelf)
-                m_detectHolder.gameObject.SetActive(true);
+            if (m_templateHolder.activeSelf)
+                m_templateHolder.SetActive(false);
+            if (!m_detectHolder.activeSelf)
+                m_detectHolder.SetActive(true);
         }
         else
         {
-            if (!m_templateHolder.gameObject.activeSelf)
-                m_templateHolder.gameObject.SetActive(true);
-            if (m_detectHolder.gameObject.activeSelf)
-                m_detectHolder.gameObject.SetActive(false);
+            if (!m_templateHolder.activeSelf)
+                m_templateHolder.SetActive(true);
+            if (m_detectHolder.activeSelf)
+                m_detectHolder.SetActive(false);
         }
     }
 
@@ -81,17 +81,17 @@ public class CrosshairTemplate
 
         if (isScoping)
         {
-            if (m_templateHolder.gameObject.activeSelf)
-                m_templateHolder.gameObject.SetActive(false);
-            if (!m_scopeHolder.gameObject.activeSelf)
-                m_scopeHolder.gameObject.SetActive(true);
+            if (m_templateHolder.activeSelf)
+                m_templateHolder.SetActive(false);
+            if (!m_scopeHolder.activeSelf)
+                m_scopeHolder.SetActive(true);
         }
         else
         {
-            if (!m_templateHolder.gameObject.activeSelf)
-                m_templateHolder.gameObject.SetActive(true);
-            if (m_scopeHolder.gameObject.activeSelf)
-                m_scopeHolder.gameObject.SetActive(false);
+            if (!m_templateHolder.activeSelf)
+                m_templateHolder.SetActive(true);
+            if (m_scopeHolder.activeSelf)
+                m_scopeHolder.SetActive(false);
         }
     }
 }

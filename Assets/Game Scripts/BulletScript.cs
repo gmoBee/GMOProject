@@ -6,9 +6,9 @@ using NaughtyAttributes;
 public class BulletScript : MonoBehaviour
 {
     [Header("Default Bullet Attributes")]
-    [SerializeField] private float moveSpeed; // Bullet shoot with speed
-    [SerializeField] private float fadingSeconds; // Destroy bullet, prevent infinite movement
-    [SerializeField] private List<string> targetTags;
+    [SerializeField] private float moveSpeed = 5f; // Bullet shoot with speed
+    [SerializeField] private float fadingSeconds = 3f; // Destroy bullet, prevent infinite movement
+    [SerializeField] private List<string> targetTags = new List<string>();
 
     // Temporary Attributes
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private Vector3 dir;
