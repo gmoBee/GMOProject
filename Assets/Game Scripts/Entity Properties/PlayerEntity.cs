@@ -3,17 +3,17 @@ using UnityEngine;
 using NaughtyAttributes;
 using VHS;
 
-[RequireComponent(typeof(PlayerControl))]
+[RequireComponent(typeof(PlayerInputData))]
 public class PlayerEntity : LivingEntity
 {
     // Datas
     [Header("Player Attributes")]
-    [SerializeField] [ReadOnly] private PlayerControl playerController = null;
+    [SerializeField] private PlayerInputData playerInputData = null;
 
     private IEnumerator m_weaponRollRoutine;
-
-    public PlayerControl Controller { get => playerController; }
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool isChangingWeapon = false;
+
+    public PlayerInputData Controller { get => playerInputData; }
 
     #region Unity BuiltIn Methods
     // Start is called before the first frame update
@@ -21,19 +21,17 @@ public class PlayerEntity : LivingEntity
     {
         // Run parent function
         base.Start();
-        playerController = GetComponent<PlayerControl>();
         OnHandInit(ownedWeapons.PrimaryWeapon);
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // Handle player wants to change weapon
         HandleRollingWeapon();
 
         // Handle player wants to use ability
-        if (playerController.MInputData.AbilityPressed && useAbilityAction != null)
-            useAbilityAction();
+        HandleAbilityUsage();
     }
     #endregion
 
@@ -44,7 +42,7 @@ public class PlayerEntity : LivingEntity
             return;
 
         // Change weapon to primary
-        if (playerController.WInputData.ChangePrimary)
+        if (playerInputData.ChangePrimary)
         {
             if (ownedWeapons.PrimaryWeapon == null || ownedWeapons.HoldOnHand.Equals(ownedWeapons.PrimaryWeapon))
                 return;
@@ -53,13 +51,19 @@ public class PlayerEntity : LivingEntity
         }
 
         // Change weapon to secondary
-        if (playerController.WInputData.ChangeSecondary)
+        if (playerInputData.ChangeSecondary)
         {
             if (ownedWeapons.SecondaryWeapon == null || ownedWeapons.HoldOnHand.Equals(ownedWeapons.SecondaryWeapon))
                 return;
 
             OnHandInit(ownedWeapons.SecondaryWeapon);
         }
+    }
+
+    public override void HandleAbilityUsage()
+    {
+        if (playerInputData.AbilityPressed && useAbilityAction != null)
+            useAbilityAction();
     }
 
     private void OnHandInit(Weapon handle)
@@ -73,7 +77,7 @@ public class PlayerEntity : LivingEntity
         ownedWeapons.HoldOnHand = handle;
         if (ownedWeapons.HoldOnHand != null)
         {
-            ownedWeapons.HoldOnHand.setInputData(playerController.WInputData);
+            ownedWeapons.HoldOnHand.setInputData(playerInputData);
             ownedWeapons.HoldOnHand.gameObject.SetActive(true);
         }
     }

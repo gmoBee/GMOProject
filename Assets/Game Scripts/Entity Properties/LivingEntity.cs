@@ -2,7 +2,7 @@
 using UnityEngine;
 using NaughtyAttributes;
 
-public class LivingEntity : MonoBehaviour
+public abstract class LivingEntity : MonoBehaviour
 {
     // All Properties are here
     [Space, Header("Entity Properties", order = 0)]
@@ -13,6 +13,7 @@ public class LivingEntity : MonoBehaviour
     // Object property variables
     [Space, Header("Inventory & Skills")]
     [SerializeField] protected OwnedWeapons ownedWeapons = new OwnedWeapons();
+    [SerializeField] private GameAbilityList choosenAbility = GameAbilityList.Nothing;
 
     private AbstractAbility genericAbility = null;
     protected Action useAbilityAction = null;
@@ -34,6 +35,7 @@ public class LivingEntity : MonoBehaviour
     {
         m_currentHealth = maxHealth;
         m_currentOxygenLvl = maxOxygenLvl;
+        SetAbility(choosenAbility);
     }
 
     protected virtual void OnDestroy()
@@ -64,15 +66,25 @@ public class LivingEntity : MonoBehaviour
             m_currentHealth = 0;
     }
 
-    public void SetAbility(AbstractAbility ability)
+    public void SetAbility(GameAbilityList ability)
     {
-        // Ignore null ability
-        if (ability == null)
-            return;
-
         // Set up ability
-        genericAbility = ability;
-        useAbilityAction = genericAbility.UseAbility;
+        choosenAbility = ability;
+        genericAbility = AbilityFactory.ChooseAbility(ability, this);
+        if (genericAbility != null)
+            useAbilityAction = genericAbility.UseAbility;
+    }
+
+    /// <summary>
+    /// Get this entity current ability, It may return null if don't have it.
+    /// </summary>
+    /// <returns>Ability or null</returns>
+    public AbstractAbility GetAbility()
+    {
+        return genericAbility;
     }
     #endregion
+
+    // Generic Methods
+    public abstract void HandleAbilityUsage();
 }

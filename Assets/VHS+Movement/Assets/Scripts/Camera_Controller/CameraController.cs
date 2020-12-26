@@ -13,13 +13,11 @@ namespace VHS
         [SerializeField] private CameraZoom cameraZoom = null;
         [SerializeField] private CameraSwaying cameraSway = null;
 
-
         // Settings
         [Space,Header("Look Settings")]
         [SerializeField] private Vector2 sensitivity = Vector2.zero;
         [SerializeField] private Vector2 smoothAmount = Vector2.zero;
         [SerializeField] [MinMaxSlider(-90f,90f)] private Vector2 lookAngleMinMax = Vector2.zero;
-
 
         // Private Variables
         private float m_yaw;
@@ -28,11 +26,9 @@ namespace VHS
         private float m_desiredYaw;
         private float m_desiredPitch;
 
-
         // Components              
         private Transform m_pitchTranform;
         private Camera m_cam;
-
 
         // Properties
         public CameraZoom Zoom { get => cameraZoom; }

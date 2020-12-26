@@ -37,10 +37,10 @@ public class Flamethrower : Weapon
 
     protected override void Update()
     {
-        if (weaponInputData.ShootClicked)
+        if (inputDataReference.ShootClicked)
             Burn();
 
-        if (weaponInputData.ShootReleased)
+        if (inputDataReference.ShootReleased)
             Refuel();
     }
 
@@ -64,10 +64,10 @@ public class Flamethrower : Weapon
 
     private void OnDrawGizmos()
     {
-        if (weaponInputData != null)
+        if (inputDataReference != null)
         {
             Vector3 barrelPos = fuelBarrel.BarrelTransform.position;
-            Vector3 flameDir = (weaponInputData.CrosshairTargetPos - barrelPos).normalized;
+            Vector3 flameDir = (inputDataReference.CrosshairTargetPos - barrelPos).normalized;
             barrelPos += flameDir * wideRadius;
 
             Gizmos.DrawWireSphere(barrelPos, wideRadius);
@@ -135,7 +135,7 @@ public class Flamethrower : Weapon
             {
                 // Cast flame
                 Vector3 barrelOrigin = fuelBarrel.BarrelTransform.position;
-                Vector3 flameDir = (weaponInputData.CrosshairTargetPos - barrelOrigin).normalized;
+                Vector3 flameDir = (inputDataReference.CrosshairTargetPos - barrelOrigin).normalized;
                 barrelOrigin += flameDir * wideRadius; 
 
                 RaycastHit[] hits = Physics.SphereCastAll(barrelOrigin, wideRadius, flameDir, maxBurnRange);

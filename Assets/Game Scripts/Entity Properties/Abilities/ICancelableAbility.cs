@@ -1,0 +1,4 @@
+﻿interface ICancelableAbility
+{
+    void CancelAbility();
+}

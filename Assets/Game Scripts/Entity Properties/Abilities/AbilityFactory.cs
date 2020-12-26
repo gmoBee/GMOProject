@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AbilityType { Supplier, Bombardment }
+public enum GameAbilityList { Nothing = 0, Supplier, Bombardment }
 
 public static class AbilityFactory
 {
-    private const float DefaultCooldown = 30f;
+    private const float DefaultCooldown = 3f;
 
-    public static AbstractAbility ChooseAbility(AbilityType ability, LivingEntity user)
+    public static AbstractAbility ChooseAbility(GameAbilityList ability, LivingEntity user)
     {
-        if (ability == AbilityType.Supplier)
+        if (ability == GameAbilityList.Supplier)
             return new Supplier(DefaultCooldown, user);
-        else // Bombardment
+        else if (ability == GameAbilityList.Bombardment)
             return new Bombardment(DefaultCooldown, user);
+        else
+            return null;
     }
 }

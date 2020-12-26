@@ -1,8 +1,6 @@
 ﻿using NaughtyAttributes;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using VHS;
 
 public class DMR : Weapon, IGunsInterface
 {
@@ -20,7 +18,7 @@ public class DMR : Weapon, IGunsInterface
     // Scoping Section
     [BoxGroup("Scope Reference")] [SerializeField] private Vector3 scopePhysicPosition = new Vector3();
     [BoxGroup("Scope Reference")] [SerializeField] private Vector3 normalPhysicPosition = new Vector3();
-    [BoxGroup("Scope Reference")] [SerializeField] [ReadOnly] private CameraController cameraControl;
+    [BoxGroup("Scope Reference")] [SerializeField] [ReadOnly] private PlayerCameraControl cameraControl;
 
     // Debugging Section
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_isShooting = false;
@@ -34,7 +32,7 @@ public class DMR : Weapon, IGunsInterface
         base.OnEnable();
         gunBarrel.BarrelReset();
         genericBarrel = gunBarrel;
-        cameraControl = gameObject.GetComponentInParent<CameraController>();
+        cameraControl = gameObject.GetComponentInParent<PlayerCameraControl>();
     }
 
     protected override void Update()
@@ -42,12 +40,12 @@ public class DMR : Weapon, IGunsInterface
         // Weapon react by input
         if (!m_isReloading)
         {
-            if (weaponInputData.IsShooting)
+            if (inputDataReference.IsShooting)
                 Shoot();
-            if (cameraControl.Zoom.ZoomClicked || cameraControl.Zoom.ZoomRelease)
+            if (inputDataReference.ZoomClicked || inputDataReference.ZoomReleased)
                 Scope();
         }
-        if (weaponInputData.IsReloading)
+        if (inputDataReference.IsReloading)
             Reload();
 
         // Handle detection on object
@@ -143,7 +141,7 @@ public class DMR : Weapon, IGunsInterface
         // TODO: Play VFX
 
         // As long as it's shooting then keep it running
-        while (!weaponInputData.ShootReleased)
+        while (!inputDataReference.ShootReleased)
         {
             fireRateHolder -= Time.deltaTime;
 
@@ -151,7 +149,7 @@ public class DMR : Weapon, IGunsInterface
             {
                 // Shoot Bullet
                 BulletScript bullet = gunBarrel.ReleaseBullet();
-                Vector3 shootDir = (weaponInputData.CrosshairTargetPos - bullet.transform.position).normalized;
+                Vector3 shootDir = (inputDataReference.CrosshairTargetPos - bullet.transform.position).normalized;
                 bullet.StartShoot(shootDir, targetTags, gunBarrel.ShootForce);
                 StartCoroutine(ShootlightPass());
 
@@ -186,7 +184,7 @@ public class DMR : Weapon, IGunsInterface
         float _speed = 1f / cameraControl.Zoom.ZoomTransitionDuration;
 
         do {
-            if (cameraControl.Zoom.IsZooming)
+            if (inputDataReference.IsZooming)
                 _percent += Time.deltaTime * _speed;
             else
                 _percent -= Time.deltaTime * _speed;

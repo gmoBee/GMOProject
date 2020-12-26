@@ -1,8 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-
 
 public abstract class AbstractAbility
 {
@@ -12,16 +9,13 @@ public abstract class AbstractAbility
     
     // Variable Handler
     private float m_secondsCooldownHolder;
-    private IEnumerator m_usingAbilityRoutine;
+    private IEnumerator m_coolingDownRoutine;
+    protected IEnumerator m_usingAbilityRoutine;
 
     // Properties
-    public float SecondsUntilCooldown { get => m_secondsCooldownHolder; }
-    public IEnumerator AbilityRoutine 
-    { 
-        get => m_usingAbilityRoutine; 
-        protected set => m_usingAbilityRoutine = value; 
-    }
-    public bool CanUseAbility { get => AbilityRoutine == null && m_secondsCooldownHolder <= 0f; }
+    public bool IsUsingAbility { get => m_usingAbilityRoutine != null; }
+    public float CooldownInPercent { get => m_secondsCooldownHolder / secondsCooldown; }
+    public bool CanUseAbility { get => !IsUsingAbility && CooldownInPercent <= 0f; }
     protected LivingEntity UserReference { get => userReference; }
 
     // Constructor
@@ -43,15 +37,37 @@ public abstract class AbstractAbility
         secondsCooldown = seconds;
     }
 
-    public virtual void UseAbility()
+    public void SetCooldown(bool active)
     {
-        if (!CanUseAbility)
-            return;
+        if (active)
+        {
+            if (m_coolingDownRoutine != null)
+                userReference.StopCoroutine(m_coolingDownRoutine);
 
-        AbilityRoutine = UsingAbility();
-        userReference.StartCoroutine(AbilityRoutine);
+            m_coolingDownRoutine = CooldownRoutine();
+            userReference.StartCoroutine(m_coolingDownRoutine);
+        }
+        else
+        {
+            if (m_coolingDownRoutine != null)
+                userReference.StopCoroutine(m_coolingDownRoutine);
+            m_secondsCooldownHolder = 0f;
+        }
+    }
+
+    private IEnumerator CooldownRoutine()
+    {
+        m_secondsCooldownHolder = secondsCooldown;
+        while (m_secondsCooldownHolder > 0f)
+        {
+            yield return null;
+            m_secondsCooldownHolder -= Time.deltaTime;
+        }
+        if (m_secondsCooldownHolder < 0f)
+            m_secondsCooldownHolder = 0f;
     }
 
     // Generic Methods
+    public abstract void UseAbility();
     protected abstract IEnumerator UsingAbility();
 }

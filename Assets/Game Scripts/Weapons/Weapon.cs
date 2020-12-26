@@ -1,5 +1,4 @@
 ﻿using NaughtyAttributes;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ public abstract class Weapon : MonoBehaviour
     [Header("Template and Data")]
     [SerializeField] protected CrosshairTemplate crosshairTemplate = null;
     [Space]
-    [SerializeField] [ReadOnly] protected WeaponInputData weaponInputData = null;
+    [SerializeField] [ReadOnly] protected PlayerInputData inputDataReference = null;
 
     // Weapon Attributes
     [Header("Generic Weapon Attributes")]
@@ -39,14 +38,14 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        if (weaponInputData != null)
-            weaponInputData = null;
+        if (inputDataReference != null)
+            inputDataReference = null;
         crosshairTemplate.DestroyCrosshair();
     }
 
     protected abstract void DetectorHandler();
-    public void setInputData(WeaponInputData dat)
+    public void setInputData(PlayerInputData dat)
     {
-        weaponInputData = dat;
+        inputDataReference = dat;
     }
 }
