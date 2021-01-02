@@ -1,11 +1,14 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OnWeaponRollArgs
 {
-    public OnWeaponRollArgs()
-    {
+    public LivingEntity Entity { private set; get; }
+    public Weapon SelectedWeapon { private set; get; }
 
+    public OnWeaponRollArgs(LivingEntity entity, Weapon selectedWeapon)
+    {
+        Entity = entity;
+        SelectedWeapon = selectedWeapon;
     }
 }

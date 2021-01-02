@@ -16,6 +16,7 @@ namespace VHS
             slideButton = KeyCode.LeftControl,
             shootButton = KeyCode.Mouse0, 
             scopeButton = KeyCode.Mouse1, 
+            useAbility = KeyCode.X,
             switchPrimaryButton = KeyCode.Alpha1,
             switchSecondaryButton = KeyCode.Alpha2
         };
@@ -93,26 +94,22 @@ namespace VHS
 
             if (movementInputData.SlideReleased)
                 movementInputData.IsSliding = false;
+
+            movementInputData.AbilityPressed = Input.GetKeyDown(inputMap.useAbility);
         }
 
         void GetWeaponInputData()
         {
             // Crosshair target position
-            weaponInputData.CrosshairScreenPos = new Vector2(Screen.width / 2f, Screen.height / 2f);
-            Ray m_crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
-            weaponInputData.CrosshairTargetPos = m_crosshairRay.GetPoint(Mathf.Sqrt(Camera.main.farClipPlane));
+            //weaponInputData.CrosshairScreenPos = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            //Ray m_crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+            //weaponInputData.MidTargetPosition = m_crosshairRay.GetPoint(Mathf.Sqrt(Camera.main.farClipPlane));
 
             weaponInputData.IsReloading = Input.GetKeyDown(inputMap.reloadButton);
             weaponInputData.ShootClicked = Input.GetKeyDown(inputMap.shootButton);
             weaponInputData.ShootReleased = Input.GetKeyUp(inputMap.shootButton);
             weaponInputData.ChangePrimary = Input.GetKeyDown(inputMap.switchPrimaryButton);
             weaponInputData.ChangeSecondary = Input.GetKeyDown(inputMap.switchSecondaryButton);
-
-            if (weaponInputData.ShootClicked)
-                weaponInputData.IsShooting = true;
-
-            if (weaponInputData.ShootReleased)
-                weaponInputData.IsShooting = false;
         }
         #endregion
     }

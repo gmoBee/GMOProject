@@ -10,6 +10,7 @@ namespace VHS
 
         bool m_isCrouching;
         bool m_crouchClicked;
+        bool m_abilityPressed;
 
         bool m_jumpClicked;
 
@@ -33,6 +34,12 @@ namespace VHS
         public float InputVectorY
         {
             set => m_inputVector.y = value;
+        }
+
+        public bool AbilityPressed
+        {
+            get => m_abilityPressed;
+            set => m_abilityPressed = value;
         }
 
         public bool IsRunning

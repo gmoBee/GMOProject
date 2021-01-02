@@ -13,11 +13,11 @@ namespace VHS
     public class PerlinNoiseData : ScriptableObject
     {
         #region Variables
-            public TransformTarget transformTarget;
+        public TransformTarget transformTarget;
 
-            [Space]
-            public float amplitude;
-            public float frequency;
+        [Space]
+        public float amplitude;
+        public float frequency;
         #endregion    
     }
 }
