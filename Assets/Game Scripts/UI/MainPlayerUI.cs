@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class MainPlayerUI : MonoBehaviour
@@ -18,8 +16,7 @@ public class MainPlayerUI : MonoBehaviour
 
     private void Update()
     {
-        AbstractAbility ability = playerReference.GetAbility();
-        if (ability != null)
-            abilitySlider.value = 1f - ability.CooldownInPercent;
+        if (playerReference.HasAbility)
+            abilitySlider.value = 1f - playerReference.Ability.CooldownInPercent;
     }
 }

@@ -8,9 +8,12 @@ public class DMR : Weapon, IGunsInterface
     [Header("DMR Attributes")]
     [SerializeField] private GunBarrel gunBarrel = null;
     [SerializeField] private float reloadTime = 0f;
-    [SerializeField] [Slider(1f, 100f)] private float accuracyRadius = 100;
+    [SerializeField] [Slider(0.8f, 1f)] private float accuracyPercentage = 0.5f;
+    [SerializeField] private AnimationCurve scopingCurve = new AnimationCurve();
+    [SerializeField] private float scopingTransitionDuration = 0.2f;
+    [SerializeField] private bool isSingleShot = false;
 
-    // Routine holder
+    // Value Holders
     private IEnumerator m_shootRoutine = null;
     private IEnumerator m_scopeRoutine = null;
     private IEnumerator m_reloadRoutine = null;
@@ -18,54 +21,59 @@ public class DMR : Weapon, IGunsInterface
     // Scoping Section
     [BoxGroup("Scope Reference")] [SerializeField] private Vector3 scopePhysicPosition = new Vector3();
     [BoxGroup("Scope Reference")] [SerializeField] private Vector3 normalPhysicPosition = new Vector3();
-    [BoxGroup("Scope Reference")] [SerializeField] [ReadOnly] private PlayerCameraControl cameraControl;
 
     // Debugging Section
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_isShooting = false;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_isScoping = false;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_isReloading = false;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_isSingleShot = false;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private float fireRateHolder = 0f;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool isShooting = false;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool isScoping = false;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool isReloading = false;
+
+    public Vector3 PhysicPositionScoping { get => scopePhysicPosition; }
+    public Vector3 PhysicPositionNormal { get => normalPhysicPosition; }
 
     #region Unity Built-In Methods
     protected override void OnEnable()
     {
-        base.OnEnable();
+        // Setup weapon and attributes
+        InputDataForWeapon.ResetInput();
+        if (FlashLight.enabled)
+            FlashLight.enabled = false; 
+    }
+
+    private void Start()
+    {
         gunBarrel.BarrelReset();
-        genericBarrel = gunBarrel;
-        cameraControl = gameObject.GetComponentInParent<PlayerCameraControl>();
+        GenericBarrel = gunBarrel;
     }
 
     protected override void Update()
     {
         // Weapon react by input
-        if (!m_isReloading)
+        if (!isReloading)
         {
-            if (inputDataReference.IsShooting)
+            if (InputDataForWeapon.ShootClicked)
                 Shoot();
-            if (inputDataReference.ZoomClicked || inputDataReference.ZoomReleased)
+            if (InputDataForWeapon.ScopeClicked)
                 Scope();
         }
-        if (inputDataReference.IsReloading)
+        if (InputDataForWeapon.IsReloading)
             Reload();
-
-        // Handle detection on object
-        DetectorHandler();
+        if (fireRateHolder > 0f)
+            fireRateHolder -= Time.deltaTime;
     }
 
     protected override void OnDisable()
     {
-        base.OnDisable();
-
         if (m_shootRoutine != null)
         {
             StopCoroutine(m_shootRoutine);
-            m_isShooting = false;
+            isShooting = false;
         }
 
         if (m_reloadRoutine != null)
         {
             StopCoroutine(m_reloadRoutine);
-            m_isReloading = false;
+            isReloading = false;
         }
 
         if (m_scopeRoutine != null)
@@ -73,14 +81,16 @@ public class DMR : Weapon, IGunsInterface
             StopCoroutine(m_scopeRoutine);
             transform.localPosition = normalPhysicPosition;
             HideMesh(false);
-            m_isScoping = false;
+            isScoping = false;
         }
+
+        InputDataForWeapon.ResetInput();
     }
     #endregion
 
     public void Shoot()
     {
-        if (m_isReloading || m_isShooting)
+        if (isReloading || isShooting)
             return;
 
         m_shootRoutine = ShootRoutine();
@@ -89,7 +99,7 @@ public class DMR : Weapon, IGunsInterface
 
     public void Scope()
     {
-        if (m_isReloading || m_isScoping)
+        if (isReloading || isScoping)
             return;
 
         m_scopeRoutine = ScopeRoutine();
@@ -98,7 +108,7 @@ public class DMR : Weapon, IGunsInterface
 
     public void Reload()
     {
-        if (m_isReloading || gunBarrel.WeaponStock >= gunBarrel.MaxCapacityWeapon)
+        if (isReloading || gunBarrel.WeaponStock >= gunBarrel.MaxCapacityWeapon)
             return;
 
         if (m_scopeRoutine != null)
@@ -111,59 +121,58 @@ public class DMR : Weapon, IGunsInterface
         StartCoroutine(m_reloadRoutine);
     }
 
-    /// <summary>
-    /// Only used for changing crosshair when detect an enemy.
-    /// </summary>
-    protected override void DetectorHandler()
+    private void HideMesh(bool hide)
     {
-        Ray crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
-        Debug.DrawLine(crosshairRay.origin, crosshairRay.origin + crosshairRay.direction, Color.red);
-        RaycastHit hit;
-        if (Physics.Raycast(crosshairRay, out hit))
-        {
+        MeshRenderer[] render = GetComponentsInChildren<MeshRenderer>();
+        SkinnedMeshRenderer[] skinnedRender = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-            if (m_isScoping || !targetTags.Contains(hit.collider.tag))
-                crosshairTemplate.CrosshairDetect(false);
-            else
-                crosshairTemplate.CrosshairDetect(true);
-        }
-        else
-        {
-            crosshairTemplate.CrosshairDetect(false);
-        }
+        foreach (MeshRenderer r in render)
+            r.enabled = !hide;
+        foreach (SkinnedMeshRenderer sr in skinnedRender)
+            sr.enabled = !hide;
+    }
+
+    private Vector3 RandomDirectionPoint(Vector3 targetPosition)
+    {
+        float distance = Vector3.Distance(gunBarrel.BarrelTransform.position, targetPosition);
+        return Random.insideUnitSphere * distance * (1f - accuracyPercentage);
     }
 
     private IEnumerator ShootRoutine()
     {
-        m_isShooting = true;
-        float fireRateHolder = 0f;
+        isShooting = true;
 
         // TODO: Play VFX
 
         // As long as it's shooting then keep it running
-        while (!inputDataReference.ShootReleased)
+        while (InputDataForWeapon.IsShooting)
         {
-            fireRateHolder -= Time.deltaTime;
-
             if (fireRateHolder <= 0f)
             {
                 // Shoot Bullet
                 BulletScript bullet = gunBarrel.ReleaseBullet();
-                Vector3 shootDir = (inputDataReference.CrosshairTargetPos - bullet.transform.position).normalized;
-                bullet.StartShoot(shootDir, targetTags, gunBarrel.ShootForce);
+                Vector3 shootDir;
+                if (!isScoping)
+                    shootDir = ((InputDataForWeapon.MidTargetPosition + RandomDirectionPoint(InputDataForWeapon.MidTargetPosition)) -
+                        bullet.transform.position).normalized;
+                else
+                    shootDir = (InputDataForWeapon.MidTargetPosition - bullet.transform.position).normalized;
+                bullet.StartShoot(shootDir, DamageRate, Targets, gunBarrel.ShootForce);
                 StartCoroutine(ShootlightPass());
 
+                // Automatically reload when barrel is empty
                 if (gunBarrel.WeaponStock <= 0)
                 {
                     Reload();
                     break;
                 }
 
-                if (m_isSingleShot)
-                    break;
-
                 // Reset fire time holder
                 fireRateHolder = FireRate;
+
+                // Single shot means the routine immediately stop after the first shot
+                if (isSingleShot)
+                    break;
             }
 
             yield return null;
@@ -171,20 +180,19 @@ public class DMR : Weapon, IGunsInterface
 
         // TODO: Stop VFX
 
-        m_isShooting = false;
+        isShooting = false;
     }
 
     private IEnumerator ScopeRoutine()
     {
-        m_isScoping = true;
-
+        isScoping = true;
         float _percent = 0f;
         float _smoothPercent = 0f;
 
-        float _speed = 1f / cameraControl.Zoom.ZoomTransitionDuration;
+        float _speed = 1f / scopingTransitionDuration;
 
         do {
-            if (inputDataReference.IsZooming)
+            if (InputDataForWeapon.IsScoping)
                 _percent += Time.deltaTime * _speed;
             else
                 _percent -= Time.deltaTime * _speed;
@@ -199,24 +207,24 @@ public class DMR : Weapon, IGunsInterface
                 HideMesh(false);
             }
 
-            _smoothPercent = cameraControl.Zoom.ZoomCurve.Evaluate(_percent);
+            _smoothPercent = scopingCurve.Evaluate(_percent);
             transform.localPosition = Vector3.Lerp(normalPhysicPosition, scopePhysicPosition, _smoothPercent);
             yield return null;
         } while (_percent > 0f);
 
-        m_isScoping = false;
+        isScoping = false;
     }
 
     private IEnumerator ReloadRoutine()
     {
-        m_isReloading = true;
+        isReloading = true;
 
         float m_reloadTimeHolder = reloadTime;
 
         // Reset physic scope position
         transform.localPosition = normalPhysicPosition;
         HideMesh(false);
-        m_isScoping = false;
+        isScoping = false;
 
         //// TODO: Calculate the same time as animation time
         //// TODO: Play Animation
@@ -228,7 +236,7 @@ public class DMR : Weapon, IGunsInterface
         }
 
         gunBarrel.ReloadWeapon();
-        m_isReloading = false;
+        isReloading = false;
     }
 
     /// <summary>
@@ -236,19 +244,8 @@ public class DMR : Weapon, IGunsInterface
     /// </summary>
     private IEnumerator ShootlightPass()
     {
-        shootLight.enabled = true;
-        yield return null;
-        shootLight.enabled = false;
-    }
-
-    private void HideMesh(bool hide)
-    {
-        MeshRenderer[] render = GetComponentsInChildren<MeshRenderer>();
-        SkinnedMeshRenderer[] skinnedRender = GetComponentsInChildren<SkinnedMeshRenderer>();
-
-        foreach (MeshRenderer r in render)
-            r.enabled = !hide;
-        foreach (SkinnedMeshRenderer sr in skinnedRender)
-            sr.enabled = !hide;
+        FlashLight.enabled = true;
+        yield return new WaitForSeconds(0.1f);
+        FlashLight.enabled = false;
     }
 }

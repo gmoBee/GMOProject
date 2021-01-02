@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameModes
+{
+    Tutorial,
+    TeamDeathMatch,
+    KingOfTheHill,
+    KoHChaos,
+    ObjectiveDomain
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -15,5 +24,10 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         instance = null;
+    }
+
+    public void SetupGamemode(GameModes mode)
+    {
+        // TODO: create game system in each game mode
     }
 }

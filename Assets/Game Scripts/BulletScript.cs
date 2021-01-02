@@ -9,12 +9,13 @@ public class BulletScript : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f; // Bullet shoot with speed
     [SerializeField] private float fadingSeconds = 3f; // Destroy bullet, prevent infinite movement
     [SerializeField] private List<string> targetTags = new List<string>();
+    [SerializeField] private uint baseDamage = 8;
 
     // Temporary Attributes
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private Vector3 dir;
     [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private Rigidbody bulletRigid;
-    [BoxGroup("Temporary Attributes")] [SerializeField] [ReadOnly] private List<string> targetTagsHolder;
     [BoxGroup("Temporary Attributes")] [SerializeField] [ReadOnly] private float speedHolder;
+    [BoxGroup("Temporary Attributes")] [SerializeField] [ReadOnly] private uint weaponDamage = 0;
 
     // Only for returning bullet to pool
     public Queue<BulletScript> ReturnToPoolReference { set; get; }
@@ -24,8 +25,6 @@ public class BulletScript : MonoBehaviour
     {
         if (bulletRigid == null)
             bulletRigid = GetComponent<Rigidbody>();
-
-        targetTagsHolder = targetTags;
         speedHolder = moveSpeed;
     }
 
@@ -34,9 +33,15 @@ public class BulletScript : MonoBehaviour
         bulletRigid.AddForce(dir * speedHolder, ForceMode.Impulse);
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, dir, out hit, speedHolder))
+        if (Physics.Raycast(transform.position, dir, out hit, Mathf.Pow(speedHolder, 2)))
         {
-            Debug.Log(hit.collider.gameObject.name);
+            LivingEntity m_entityGotHit = hit.collider.gameObject.GetComponent<LivingEntity>();
+            if (m_entityGotHit != null)
+            {
+                m_entityGotHit.Hit(weaponDamage + baseDamage);
+                Debug.Log($"{m_entityGotHit.name} Dealt Damage: {weaponDamage + baseDamage}");
+            }
+                
             gameObject.SetActive(false);
             ReturnToPoolReference.Enqueue(this);
         }
@@ -44,28 +49,29 @@ public class BulletScript : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawRay(transform.position, dir);
+        Gizmos.DrawRay(transform.position, dir * Mathf.Pow(speedHolder, 2));
     }
     #endregion
 
-    public void StartShoot(Vector3 dir)
+    public void StartShoot(Vector3 dir, uint weaponDamage)
     {
         if (!gameObject.activeSelf)
             gameObject.SetActive(true);
         // Assign temporary attributes
         this.dir = dir;
-        targetTagsHolder = targetTags;
+        this.weaponDamage = weaponDamage;
         speedHolder = moveSpeed;
         StartCoroutine(BulletDisappear());
     }
 
-    public void StartShoot(Vector3 dir, List<string> targetTags, float speed)
+    public void StartShoot(Vector3 dir, uint weaponDamage, List<string> targetTags, float speed)
     {
         if (!gameObject.activeSelf)
             gameObject.SetActive(true);
 
         this.dir = dir;
-        targetTagsHolder = targetTags;
+        this.targetTags = targetTags;
+        this.weaponDamage = weaponDamage;
         speedHolder = speed;
         StartCoroutine(BulletDisappear());
     }

@@ -26,4 +26,6 @@ public struct OwnedWeapons
         set => secondaryWeapon = value;
         get => secondaryWeapon;
     }
+
+    public bool HasWeapon { get => primaryWeapon != null || secondaryWeapon != null; }
 }

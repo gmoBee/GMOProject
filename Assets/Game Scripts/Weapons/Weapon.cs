@@ -2,50 +2,62 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WeaponClass { Primary, Secondary };
+[System.Flags]
+public enum WeaponClass
+{
+    Undefined = 0,
+    Primary = 1,
+    Secondary = 2
+}
+
+[System.Flags]
+public enum WeaponFlags
+{
+    Default = 0,
+    NoScope = 1,
+    CantDetect = 2
+}
 
 public abstract class Weapon : MonoBehaviour
 {
     // Template and Data
-    [Header("Template and Data")]
-    [SerializeField] protected CrosshairTemplate crosshairTemplate = null;
-    [Space]
-    [SerializeField] [ReadOnly] protected PlayerInputData inputDataReference = null;
+    [Header("Data Attributes")]
+    [SerializeField] private WeaponInputData inputData = null;
+    [SerializeField] private uint damageRate = 5;
+    [Slider(0.1f, 5f)] [SerializeField] private float fireRate = 1f;
 
     // Weapon Attributes
-    [Header("Generic Weapon Attributes")]
-    [Slider(0.1f, 5f)] [SerializeField] private float fireRate = 1f;
+    [Header("Physical Attributes")]
     [SerializeField] private WeaponClass weaponClass = WeaponClass.Primary;
-    [SerializeField] private float damageRate = 5f;
-    [SerializeField] protected List<string> targetTags;
-    [SerializeField] protected AnimationCurve normalFireRate = new AnimationCurve();
-    [SerializeField] protected Light shootLight = null;
-
-    protected WeaponBarrel genericBarrel = null;
+    [SerializeField] private List<string> targetTags = new List<string>();
+    [SerializeField] private AnimationCurve normalFireRate = new AnimationCurve();
+    [SerializeField] private Light flashLight = null;
+    [SerializeField] private WeaponFlags flag;
 
     // Properties
-    public float FireRate { set { fireRate = value; } get { return fireRate; } }
-    public float DamageRate { set { damageRate = value; } get { return damageRate; } }
-    public WeaponClass WeaponClassification { get => weaponClass; }
+    public WeaponInputData InputDataForWeapon => inputData;
+    public WeaponBarrel GenericBarrel { get; protected set; } = null;
+    public WeaponClass WeaponClassification => weaponClass;
+    public WeaponFlags Flag => flag;
+    
+    protected List<string> Targets => targetTags;
+    protected AnimationCurve EasingFireRate => normalFireRate;
+    protected Light FlashLight => flashLight;
 
-    // Unity Built-In Methods
-    protected virtual void OnEnable()
-    {
-        crosshairTemplate.InitCrosshair();
+    public float FireRate 
+    { 
+        set => fireRate = value; 
+        get => fireRate; 
+    } 
+
+    public uint DamageRate 
+    { 
+        set => damageRate = value; 
+        get => damageRate; 
     }
 
+    // Abstract Methods
+    protected abstract void OnEnable();
     protected abstract void Update();
-
-    protected virtual void OnDisable()
-    {
-        if (inputDataReference != null)
-            inputDataReference = null;
-        crosshairTemplate.DestroyCrosshair();
-    }
-
-    protected abstract void DetectorHandler();
-    public void setInputData(PlayerInputData dat)
-    {
-        inputDataReference = dat;
-    }
+    protected abstract void OnDisable();
 }

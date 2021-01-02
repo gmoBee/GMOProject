@@ -1,35 +1,30 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WeaponInputData", menuName = "FirstPersonController/Data/WeaponInputData", order = 0)]
-public class WeaponInputData : ScriptableObject
+public class WeaponInputData : MonoBehaviour
 {
     #region Data
-    Vector2 m_crosshairTargetScreenPos;
-    Vector3 m_crosshairTargetPos;
+    private Vector3 m_midTargetPosition;
 
-    bool m_changePrimary;
-    bool m_changeSecondary;
+    private bool m_changePrimary;
+    private bool m_changeSecondary;
 
-    bool m_shootClicked;
-    bool m_isShooting;
-    bool m_shootReleased;
+    private bool m_shootClicked;
+    private bool m_isShooting;
+    private bool m_shootReleased;
 
-    bool m_isReloading;
+    private bool m_isReloading;
+
+    private bool m_scopeClicked;
+    private bool m_isScoping;
+    private bool m_scopeReleased;
     #endregion
 
     #region Properties
-    public Vector3 CrosshairTargetPos
+    public Vector3 MidTargetPosition
     {
-        get => m_crosshairTargetPos;
-        set => m_crosshairTargetPos = value;
-    }
-
-    public Vector2 CrosshairScreenPos
-    {
-        get => m_crosshairTargetScreenPos;
-        set => m_crosshairTargetScreenPos = value;
+        get => m_midTargetPosition;
+        set => m_midTargetPosition = value;
     }
 
     public bool ChangePrimary
@@ -67,17 +62,37 @@ public class WeaponInputData : ScriptableObject
         get => m_isReloading;
         set => m_isReloading = value;
     }
+
+    public bool ScopeClicked
+    {
+        get => m_scopeClicked;
+        set => m_scopeClicked = value;
+    }
+
+    public bool ScopeReleased
+    {
+        get => m_scopeReleased;
+        set => m_scopeReleased = value;
+    }
+
+    public bool IsScoping
+    {
+        get => m_isScoping;
+        set => m_isScoping = value;
+    }
     #endregion
 
     #region Custom Method
     public void ResetInput()
     {
-        m_crosshairTargetScreenPos = Vector2.zero;
-        m_crosshairTargetPos = Vector3.zero;
+        m_midTargetPosition = Vector3.zero;
         m_changePrimary = false;
         m_changeSecondary = false;
         m_isShooting = false;
         m_isReloading = false;
+        m_scopeClicked = false;
+        m_isScoping = false;
+        m_scopeReleased = false;
     }
     #endregion
 }

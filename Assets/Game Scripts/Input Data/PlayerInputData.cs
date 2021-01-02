@@ -29,8 +29,8 @@ public class PlayerInputData : MonoBehaviour, IRestrictionInput
     private bool m_interactedClicked;
     private bool m_interactedRelease;
 
-    private Vector2 m_crosshairTargetScreenPos;
-    private Vector3 m_crosshairTargetPos;
+    private Vector2 m_midTargetScreen;
+    private Vector3 m_midTargetPosition;
 
     private bool m_changePrimary;
     private bool m_changeSecondary;
@@ -55,16 +55,16 @@ public class PlayerInputData : MonoBehaviour, IRestrictionInput
         set => m_cameraMoveDir = value;
     }
 
-    public Vector3 CrosshairTargetPos
+    public Vector3 MidTargetPosition
     {
-        get => m_crosshairTargetPos;
-        set => m_crosshairTargetPos = value;
+        get => m_midTargetPosition;
+        set => m_midTargetPosition = value;
     }
 
-    public Vector2 CrosshairScreenPos
+    public Vector2 MidTargetScreen
     {
-        get => m_crosshairTargetScreenPos;
-        set => m_crosshairTargetScreenPos = value;
+        get => m_midTargetScreen;
+        set => m_midTargetScreen = value;
     }
 
     public bool ChangePrimary
@@ -243,8 +243,8 @@ public class PlayerInputData : MonoBehaviour, IRestrictionInput
         m_interactedClicked = false;
         m_interactedRelease = false;
 
-        m_crosshairTargetScreenPos = Vector2.zero;
-        m_crosshairTargetPos = Vector3.zero;
+        m_midTargetScreen = Vector2.zero;
+        m_midTargetPosition = Vector3.zero;
 
         m_changePrimary = false;
         m_changeSecondary = false;

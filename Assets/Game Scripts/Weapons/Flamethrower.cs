@@ -1,6 +1,5 @@
 ﻿using NaughtyAttributes;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -29,25 +28,28 @@ public class Flamethrower : Weapon
     #region Unity Built-In Methods
     protected override void OnEnable()
     {
-        base.OnEnable();
-        fuelBarrel.BarrelReset();
-        genericBarrel = fuelBarrel;
+        InputDataForWeapon.ResetInput();
+        if (FlashLight.enabled)
+            FlashLight.enabled = false;
         flameVisualEffect.Stop();
+    }
+
+    private void Start()
+    {
+        fuelBarrel.BarrelReset();
+        GenericBarrel = fuelBarrel;
     }
 
     protected override void Update()
     {
-        if (inputDataReference.ShootClicked)
+        if (InputDataForWeapon.ShootClicked)
             Burn();
-
-        if (inputDataReference.ShootReleased)
+        if (InputDataForWeapon.ShootReleased)
             Refuel();
     }
 
     protected override void OnDisable()
     {
-        base.OnDisable();
-
         if (m_burnRoutine != null)
         {
             StopCoroutine(m_burnRoutine);
@@ -64,10 +66,10 @@ public class Flamethrower : Weapon
 
     private void OnDrawGizmos()
     {
-        if (inputDataReference != null)
+        if (InputDataForWeapon != null)
         {
             Vector3 barrelPos = fuelBarrel.BarrelTransform.position;
-            Vector3 flameDir = (inputDataReference.CrosshairTargetPos - barrelPos).normalized;
+            Vector3 flameDir = (InputDataForWeapon.MidTargetPosition - barrelPos).normalized;
             barrelPos += flameDir * wideRadius;
 
             Gizmos.DrawWireSphere(barrelPos, wideRadius);
@@ -105,24 +107,13 @@ public class Flamethrower : Weapon
         StartCoroutine(m_refuelRoutine);
     }
 
-    protected override void DetectorHandler()
-    {
-        Ray crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
-        Debug.DrawLine(crosshairRay.origin, crosshairRay.origin + crosshairRay.direction, Color.red);
-        RaycastHit hit;
-        if (Physics.Raycast(crosshairRay, out hit))
-            crosshairTemplate.CrosshairDetect(true);
-        else
-            crosshairTemplate.CrosshairDetect(false);
-    }
-
     private IEnumerator BurningRoutine()
     {
         m_isFlameActive = true;
         float fireRateHolder = 0f;
 
         // Play VFX and lighting
-        shootLight.enabled = true;
+        FlashLight.enabled = true;
         flameVisualEffect.Play();
 
         while (fuelBarrel.CurrentFuel > 0f)
@@ -135,7 +126,7 @@ public class Flamethrower : Weapon
             {
                 // Cast flame
                 Vector3 barrelOrigin = fuelBarrel.BarrelTransform.position;
-                Vector3 flameDir = (inputDataReference.CrosshairTargetPos - barrelOrigin).normalized;
+                Vector3 flameDir = (InputDataForWeapon.MidTargetPosition - barrelOrigin).normalized;
                 barrelOrigin += flameDir * wideRadius; 
 
                 RaycastHit[] hits = Physics.SphereCastAll(barrelOrigin, wideRadius, flameDir, maxBurnRange);
@@ -147,10 +138,14 @@ public class Flamethrower : Weapon
                     if (hit.transform.Equals(transform.root))
                         continue;
 
-                    if (targetTags.Contains(hit.collider.tag))
+                    if (Targets.Contains(hit.collider.tag))
                     {
-                        Debug.Log(hit.collider.name);
-                        Debug.DrawLine(barrelOrigin, hit.point);
+                        LivingEntity m_entityGotHit = hit.collider.GetComponent<LivingEntity>();
+                        if (m_entityGotHit != null)
+                        {
+                            m_entityGotHit.Hit(DamageRate);
+                            Debug.Log($"{m_entityGotHit.name} got burned and taken damage: {DamageRate}");
+                        }
                     }
                 }
                 
@@ -170,7 +165,7 @@ public class Flamethrower : Weapon
 
         // Stop VFX and lighting
         flameVisualEffect.Stop();
-        shootLight.enabled = false;
+        FlashLight.enabled = false;
 
         // Keep the cooldown running when flamethrower is running out
         if (fuelBarrel.CurrentFuel > 0f)

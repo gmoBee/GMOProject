@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8854067091080594962}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8217931303791578643}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: switch.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2054138570762215371}
   - component: {fileID: 6248611064082805213}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: switch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,8 +155,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2708973300150188198}
   - component: {fileID: 6981283194172053904}
+  - component: {fileID: 7651260113077508426}
   - component: {fileID: 4485093998547393959}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Sl8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +171,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1424101779497208501}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.45, y: -0.5, z: 1}
   m_LocalScale: {x: 0.27869257, y: 0.27869257, z: 0.27869257}
   m_Children:
@@ -195,7 +196,7 @@ Transform:
   - {fileID: 2054138570762215371}
   - {fileID: 8217931303791578643}
   - {fileID: 6927461126599556878}
-  - {fileID: 6981283194477705758}
+  - {fileID: 8910334086444998034}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -211,15 +212,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc95396517ccda84a817a763a821cf12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairTemplate:
-    uiTemplatePrefab: {fileID: 0}
-    uiPlaceholder: {fileID: 0}
-  weaponInputData: {fileID: 0}
-  fireRate: 2.5
+  inputData: {fileID: 7651260113077508426}
   damageRate: 5
-  targetHitLayer:
-    serializedVersion: 2
-    m_Bits: 1281
+  fireRate: 2.5
+  weaponClass: 1
+  targetTags:
+  - Target
+  - Player
   normalFireRate:
     serializedVersion: 2
     m_Curve:
@@ -244,16 +243,53 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  flashLight: {fileID: 1965079853003043322}
   gunBarrel: {fileID: 4485093998547393959}
   reloadTime: 1.5
-  accuracyRadius: 100
+  accuracyPercentage: 0.95
+  scopingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  scopingTransitionDuration: 0.2
+  isSingleShot: 1
   scopePhysicPosition: {x: 0.0015, y: -0.385, z: 0.3}
   normalPhysicPosition: {x: 0.45, y: -0.5, z: 1}
-  cameraControl: {fileID: 0}
-  m_isShooting: 0
-  m_isScoping: 0
-  m_isReloading: 0
-  m_isSingleShot: 0
+  isShooting: 0
+  isScoping: 0
+  isReloading: 0
+--- !u!114 &7651260113077508426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424101779497208501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 102476f4ad889ba4892a4e713927ba19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4485093998547393959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,11 +302,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadebad2158e41840afed998fd123cc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 0}
-  maxWeaponStock: 0
-  maxReserveStock: 0
-  barrelTransform: {fileID: 0}
-  shootForce: 0
+  bulletPrefab: {fileID: -7924660427010706290, guid: a2c23112fc2ef734e96cf8bd3eff6319,
+    type: 3}
+  maxWeaponStock: 5
+  maxReserveStock: 25
+  barrelTransform: {fileID: 8910334086444998034}
+  shootForce: 20
   m_reservedStock: 0
   m_weaponStock: 0
 --- !u!1 &1440263079418307524
@@ -284,7 +321,7 @@ GameObject:
   - component: {fileID: 7889250502416050163}
   - component: {fileID: 8229018483322776441}
   - component: {fileID: 8664460215665712683}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,7 +400,7 @@ GameObject:
   - component: {fileID: 1406239993712087860}
   - component: {fileID: 6921607996670481297}
   - component: {fileID: 3762135432699352703}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: stock .002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,7 +478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6927461126599556878}
   - component: {fileID: 5356111349568209968}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: 'trigger '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -514,6 +551,98 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0014813018, y: 0.157164, z: 0.0074256137}
     m_Extent: {x: 0.006508655, y: 0.13453034, z: 0.05656948}
   m_DirtyAABB: 0
+--- !u!1 &1965079853003043300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1965079853003043301}
+  - component: {fileID: 1965079853003043322}
+  m_Layer: 0
+  m_Name: Point Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1965079853003043301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965079853003043300}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.10187954}
+  m_LocalScale: {x: 0.27869257, y: 0.27869257, z: 0.27869257}
+  m_Children: []
+  m_Father: {fileID: 8910334086444998034}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1965079853003043322
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965079853003043300}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 2
+  m_Shape: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1.5
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: 0
+    m_CustomResolution: -1
+    m_Strength: 0.85
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 0
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &2135912857065062602
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,7 +652,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 645784334189484436}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -556,7 +685,7 @@ GameObject:
   - component: {fileID: 4957656691278127907}
   - component: {fileID: 4721519964735801405}
   - component: {fileID: 4116452341608552766}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: stock .001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -635,7 +764,7 @@ GameObject:
   - component: {fileID: 1906480443866701810}
   - component: {fileID: 5726067275745045062}
   - component: {fileID: 7938980938006347698}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Cube.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -712,7 +841,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2605467142648383299}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -742,7 +871,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2591392165529337695}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -775,7 +904,7 @@ GameObject:
   - component: {fileID: 5908465615261265258}
   - component: {fileID: 1676583622024359219}
   - component: {fileID: 3050538803827674016}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: 'reciever '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -854,7 +983,7 @@ GameObject:
   - component: {fileID: 39226561363409833}
   - component: {fileID: 1873387454141342375}
   - component: {fileID: 8432210546352174052}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: 'Iron Sight '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -931,7 +1060,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2261839801908896747}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone.005_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -961,7 +1090,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6743916378984024145}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -992,7 +1121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6849221943619069213}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1023,7 +1152,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 507594034599354550}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1054,7 +1183,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 657923532077865788}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1086,7 +1215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7754342115287099952}
   - component: {fileID: 5449268563754817589}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Cylinder.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1175,7 +1304,7 @@ GameObject:
   - component: {fileID: 1377347218299351467}
   - component: {fileID: 5899006044089299203}
   - component: {fileID: 4228750122429152238}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1252,7 +1381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7620679079796933883}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1285,7 +1414,7 @@ GameObject:
   - component: {fileID: 1569647448583680796}
   - component: {fileID: 1266793515981479138}
   - component: {fileID: 3772329458635551494}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1363,7 +1492,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6807880891330555799}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone_end 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1393,7 +1522,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6981283194009249697}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: firePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1414,36 +1543,6 @@ Transform:
   m_Father: {fileID: 1569647448583680796}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6981283194477705745
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6981283194477705758}
-  m_Layer: 10
-  m_Name: Barrel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6981283194477705758
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6981283194477705745}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0358818, y: 0.6785974, z: 4.812435}
-  m_LocalScale: {x: 3.5881832, y: 3.5881832, z: 3.5881832}
-  m_Children: []
-  m_Father: {fileID: 2708973300150188198}
-  m_RootOrder: 21
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7001139519496330272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,7 +1552,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1816708199585690408}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1484,7 +1583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2880634865487958885}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Bone 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1517,7 +1616,7 @@ GameObject:
   - component: {fileID: 2265544230258327318}
   - component: {fileID: 8688889821509338448}
   - component: {fileID: 2310560864399366116}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: iron sight 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1596,7 +1695,7 @@ GameObject:
   - component: {fileID: 2329180781640828920}
   - component: {fileID: 4320959365866492086}
   - component: {fileID: 9149275719414247726}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: jamper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1675,7 +1774,7 @@ GameObject:
   - component: {fileID: 2809241734866850489}
   - component: {fileID: 21775663446365839}
   - component: {fileID: 61962941276758313}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: 'stock '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1754,7 +1853,7 @@ GameObject:
   - component: {fileID: 1630692175433618756}
   - component: {fileID: 8934894487609758456}
   - component: {fileID: 4100348804862940747}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: 'handguard and carry '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1833,7 +1932,7 @@ GameObject:
   - component: {fileID: 979423446579513964}
   - component: {fileID: 7535366086424016238}
   - component: {fileID: 8491331211966472456}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: joints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1912,7 +2011,7 @@ GameObject:
   - component: {fileID: 4333043716758950543}
   - component: {fileID: 6552541611947919040}
   - component: {fileID: 8048620397067149083}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: 'magazine reciver '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1980,6 +2079,37 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &8910334086444998045
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8910334086444998034}
+  m_Layer: 0
+  m_Name: Barrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8910334086444998034
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8910334086444998045}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0358818, y: 0.6785974, z: 4.812435}
+  m_LocalScale: {x: 3.5881832, y: 3.5881832, z: 3.5881832}
+  m_Children:
+  - {fileID: 1965079853003043301}
+  m_Father: {fileID: 2708973300150188198}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9024698808826667376
 GameObject:
   m_ObjectHideFlags: 0
@@ -1991,7 +2121,7 @@ GameObject:
   - component: {fileID: 4776908769598318159}
   - component: {fileID: 3322595950580030121}
   - component: {fileID: 3853618133731496810}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: butt
   m_TagString: Untagged
   m_Icon: {fileID: 0}

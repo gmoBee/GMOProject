@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
@@ -354,7 +353,7 @@ public class FPControl : MonoBehaviour
     protected virtual void CalculateSpeed()
     {
         m_currentSpeed = playerInputData.IsRunning && CanRun() ? runSpeed : walkSpeed;
-        m_currentSpeed = playerInputData.IsSliding ? slideSpeed : m_currentSpeed;
+        m_currentSpeed = playerInputData.IsSliding && m_duringSlideAnimation ? slideSpeed : m_currentSpeed;
         m_currentSpeed = playerInputData.IsCrouching ? crouchSpeed : m_currentSpeed;
         m_currentSpeed = !playerInputData.IsMoving ? 0f : m_currentSpeed;
         Vector2 _moveDir = playerInputData.MoveDirection;
@@ -411,14 +410,12 @@ public class FPControl : MonoBehaviour
         float _currentHeight = m_characterController.height;
         Vector3 _currentCenter = m_characterController.center;
 
-        float _desiredHeight = playerInputData.IsCrouching ? m_initHeight : m_crouchHeight;
-        Vector3 _desiredCenter = playerInputData.IsCrouching ? m_initCenter : m_crouchCenter;
+        float _desiredHeight = playerInputData.IsCrouching ? m_crouchHeight : m_initHeight;
+        Vector3 _desiredCenter = playerInputData.IsCrouching ? m_crouchCenter : m_initCenter;
 
         Vector3 _camPos = m_yawTransform.localPosition;
         float _camCurrentHeight = _camPos.y;
-        float _camDesiredHeight = playerInputData.IsCrouching ? m_initCamHeight : m_crouchCamHeight;
-
-        playerInputData.IsCrouching = !playerInputData.IsCrouching;
+        float _camDesiredHeight = playerInputData.IsCrouching ? m_crouchCamHeight : m_initCamHeight;
         m_headBob.CurrentStateHeight = playerInputData.IsCrouching ? m_crouchCamHeight : m_initCamHeight;
 
         while (_percent < 1f)
@@ -571,7 +568,8 @@ public class FPControl : MonoBehaviour
                 m_headBob.ResetHeadBob();
 
             if (!m_duringCrouchAnimation) // we want to reset our head bob only if we are standing still and not during crouch routine
-                m_yawTransform.localPosition = Vector3.Lerp(m_yawTransform.localPosition, new Vector3(0f, m_headBob.CurrentStateHeight, 0f), Time.deltaTime * smoothHeadBobSpeed);
+                m_yawTransform.localPosition = Vector3.Lerp(m_yawTransform.localPosition, new Vector3(0f, m_headBob.CurrentStateHeight, 0f), 
+                    Time.deltaTime * smoothHeadBobSpeed);
         }
 
         //m_camTransform.localPosition = Vector3.Lerp(m_camTransform.localPosition, m_headBob.FinalOffset, Time.deltaTime * smoothHeadBobSpeed);

@@ -17,6 +17,8 @@ public class CrosshairTemplate
     private GameObject m_detectHolder;
     private GameObject m_scopeHolder;
 
+    public bool HasTemplate { get => placeholder != null && crosshairDefaultPrefab != null; }
+
     public void InitCrosshair()
     {
         // Check all templates are set

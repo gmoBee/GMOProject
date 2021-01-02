@@ -39,18 +39,16 @@ public abstract class AbstractAbility
 
     public void SetCooldown(bool active)
     {
+        if (m_coolingDownRoutine != null)
+            userReference.StopCoroutine(m_coolingDownRoutine);
+
         if (active)
         {
-            if (m_coolingDownRoutine != null)
-                userReference.StopCoroutine(m_coolingDownRoutine);
-
             m_coolingDownRoutine = CooldownRoutine();
             userReference.StartCoroutine(m_coolingDownRoutine);
         }
         else
         {
-            if (m_coolingDownRoutine != null)
-                userReference.StopCoroutine(m_coolingDownRoutine);
             m_secondsCooldownHolder = 0f;
         }
     }

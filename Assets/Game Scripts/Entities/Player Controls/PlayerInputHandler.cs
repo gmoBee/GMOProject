@@ -24,6 +24,8 @@ public class PlayerInputHandler : MonoBehaviour
         switchSecondaryButton = KeyCode.Alpha2
     };
 
+    public PlayerInputData InputData => playerInputData;
+
     #region Unity BuiltIn Methods
     void Start()
     {
@@ -90,11 +92,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     void GetWeaponInputData()
     {
-        // Crosshair target position
-        playerInputData.CrosshairScreenPos = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        Ray m_crosshairRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
-        playerInputData.CrosshairTargetPos = m_crosshairRay.GetPoint(Mathf.Sqrt(Camera.main.farClipPlane));
-
         playerInputData.IsReloading = Input.GetKeyDown(inputMap.reloadButton);
         playerInputData.ShootClicked = Input.GetKeyDown(inputMap.shootButton);
         playerInputData.ShootReleased = Input.GetKeyUp(inputMap.shootButton);
