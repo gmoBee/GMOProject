@@ -13,10 +13,10 @@ public abstract class AbstractAbility
     protected IEnumerator m_usingAbilityRoutine;
 
     // Properties
-    public bool IsUsingAbility { get => m_usingAbilityRoutine != null; }
-    public float CooldownInPercent { get => m_secondsCooldownHolder / secondsCooldown; }
-    public bool CanUseAbility { get => !IsUsingAbility && CooldownInPercent <= 0f; }
-    protected LivingEntity UserReference { get => userReference; }
+    public bool IsUsingAbility => m_usingAbilityRoutine != null;
+    public float CooldownInPercent => m_secondsCooldownHolder / secondsCooldown;
+    public bool CanUseAbility => !IsUsingAbility && CooldownInPercent <= 0f;
+    protected LivingEntity UserReference => userReference;
 
     // Constructor
     protected AbstractAbility(float secondsCooldown, LivingEntity userReference)
@@ -66,6 +66,6 @@ public abstract class AbstractAbility
     }
 
     // Generic Methods
-    public abstract void UseAbility();
-    protected abstract IEnumerator UsingAbility();
+    public abstract void UseAbility(Animator animReference);
+    protected abstract IEnumerator UsingAbility(Animator animReference);
 }

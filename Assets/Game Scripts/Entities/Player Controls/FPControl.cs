@@ -410,6 +410,8 @@ public class FPControl : MonoBehaviour
         float _currentHeight = m_characterController.height;
         Vector3 _currentCenter = m_characterController.center;
 
+        playerInputData.IsCrouching = !playerInputData.IsCrouching;
+
         float _desiredHeight = playerInputData.IsCrouching ? m_crouchHeight : m_initHeight;
         Vector3 _desiredCenter = playerInputData.IsCrouching ? m_crouchCenter : m_initCenter;
 

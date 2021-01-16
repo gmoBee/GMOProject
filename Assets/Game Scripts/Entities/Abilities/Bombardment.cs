@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bombardment : AbstractAbility, ICancelableAbility
@@ -12,7 +11,7 @@ public class Bombardment : AbstractAbility, ICancelableAbility
         // TODO: Setup default
     }
 
-    public override void UseAbility()
+    public override void UseAbility(Animator animReference)
     {
         if (IsUsingAbility && m_isAiming)
         {
@@ -23,7 +22,7 @@ public class Bombardment : AbstractAbility, ICancelableAbility
         if (!CanUseAbility)
             return;
 
-        m_usingAbilityRoutine = UsingAbility();
+        m_usingAbilityRoutine = UsingAbility(animReference);
         UserReference.StartCoroutine(m_usingAbilityRoutine);
     }
 
@@ -33,7 +32,7 @@ public class Bombardment : AbstractAbility, ICancelableAbility
         m_isAiming = false;
     }
 
-    protected override IEnumerator UsingAbility()
+    protected override IEnumerator UsingAbility(Animator animReference)
     {
         m_isAiming = true;
         yield return null;

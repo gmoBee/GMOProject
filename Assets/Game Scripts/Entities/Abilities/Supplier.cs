@@ -9,16 +9,16 @@ public class Supplier : AbstractAbility
         // TODO: Setup default
     }
 
-    public override void UseAbility()
+    public override void UseAbility(Animator animReference)
     {
         if (!CanUseAbility)
             return;
 
-        m_usingAbilityRoutine = UsingAbility();
+        m_usingAbilityRoutine = UsingAbility(animReference);
         UserReference.StartCoroutine(m_usingAbilityRoutine);
     }
 
-    protected override IEnumerator UsingAbility()
+    protected override IEnumerator UsingAbility(Animator animReference)
     {
         Debug.Log("Supplier Ability Used!");
         yield return null;

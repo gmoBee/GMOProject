@@ -131,7 +131,6 @@ public class Flamethrower : Weapon
 
                 RaycastHit[] hits = Physics.SphereCastAll(barrelOrigin, wideRadius, flameDir, maxBurnRange);
                 Debug.DrawRay(barrelOrigin, flameDir * maxBurnRange);
-
                 foreach (RaycastHit hit in hits)
                 {
                     // if it detects self fire then ignore hit
@@ -141,14 +140,13 @@ public class Flamethrower : Weapon
                     if (Targets.Contains(hit.collider.tag))
                     {
                         LivingEntity m_entityGotHit = hit.collider.GetComponent<LivingEntity>();
-                        if (m_entityGotHit != null)
+                        if (m_entityGotHit != null && m_entityGotHit.RelationID != OnHandOwner.RelationID)
                         {
                             m_entityGotHit.Hit(DamageRate);
                             Debug.Log($"{m_entityGotHit.name} got burned and taken damage: {DamageRate}");
                         }
                     }
                 }
-                
                 fireRateHolder = FireRate;
             }
 

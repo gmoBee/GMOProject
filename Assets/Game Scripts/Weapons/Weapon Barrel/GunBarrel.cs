@@ -75,7 +75,7 @@ public class GunBarrel : WeaponBarrel
         // Create hundreds of bullets
         for (int i = 0; i < maxWeaponStock + maxReserveStock; i++)
         {
-            BulletScript bullet = UnityEngine.Object.Instantiate(bulletPrefab);
+            BulletScript bullet = Instantiate(bulletPrefab);
             if (bullet.gameObject.activeSelf)
                 bullet.gameObject.SetActive(false);
             bulletWeaponPool.Enqueue(bullet);

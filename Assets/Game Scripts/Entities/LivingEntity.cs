@@ -8,68 +8,64 @@ public abstract class LivingEntity : MonoBehaviour
     [Space, Header("Entity Attributes", order = 0)]
     [SerializeField] private uint maxHealth = 100;
     [SerializeField] private uint maxOxygenLvl = 100;
-    [SerializeField] private Animator entityAnim = null;
-
-    // Object property variables
-    [Space, Header("Inventory & Skills")]
-    [SerializeField] protected OwnedWeapons ownedWeapons = new OwnedWeapons();
-    [SerializeField] protected GameAbilityList choosenAbility = GameAbilityList.Nothing;
-
-    private AbstractAbility genericAbility = null;
+    [SerializeField] private uint entityRelationID = 0;
 
     // Debugger
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private uint currentOxygenLvl;
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private uint currentHealth;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private uint m_currentOxygenLvl;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private uint m_currentHealth;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_isDying = false;
 
-    public bool IsDead => currentHealth == 0;
-    public bool HasAbility => genericAbility != null;
-    public Animator EntityAnimator => entityAnim;
+    public bool IsDead => m_currentHealth == 0;
     public uint MaxHealth => maxHealth;
     public uint MaxOxygenLvl => maxOxygenLvl;
-    public OwnedWeapons CurrentOwnedWeapons => ownedWeapons;
+
+    protected bool IsDying
+    {
+        get => m_isDying;
+        set => m_isDying = value;
+    }
 
     public uint Health
     {
-        get => currentHealth;
+        get => m_currentHealth;
         protected set
         {
             if (value > maxHealth)
-                currentHealth = maxHealth;
+                m_currentHealth = maxHealth;
             else
-                currentHealth = value;
+                m_currentHealth = value;
         }
     }
     public uint OxygenLevel
     {
-        get => currentOxygenLvl;
+        get => m_currentOxygenLvl;
         protected set
         {
             if (value > maxOxygenLvl)
-                currentOxygenLvl = maxHealth;
+                m_currentOxygenLvl = maxHealth;
             else
-                currentOxygenLvl = value;
+                m_currentOxygenLvl = value;
         }
     }
 
-    public AbstractAbility Ability
+    public uint RelationID
     {
-        get => genericAbility;
-        protected set => genericAbility = value;
+        get => entityRelationID;
+        set => entityRelationID = value;
     }
 
-    #region Generic Unity BuiltIn Methods
-    protected abstract void OnEnable();
-    protected abstract void OnDisable();
-    protected abstract void OnDestroy();
-    #endregion
+    public IEntitySpawner SpawnPoint { get; set; }
 
-    #region Custom Generic Methods
-    protected abstract void WeaponHandInit(Weapon handle);
-    protected abstract void HandleAbilityUsage();
-    protected abstract IEnumerator WeaponRollRoutine();
+    #region Generic Custom Methods
     public abstract void Heal(uint amount);
     public abstract void Hit(uint damage);
-    public abstract void SetAbility(GameAbilityList ability);
     public abstract void ResetEntity();
+
+    /// <summary>
+    /// Check relation between 2 entity.
+    /// </summary>
+    /// <param name="entity">Other entity</param>
+    /// <returns>True if they are friends, else then false</returns>
+    public abstract bool CheckRelation(LivingEntity entity);
     #endregion
 }
