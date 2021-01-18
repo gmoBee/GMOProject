@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum GameModes
 {
@@ -15,19 +13,24 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    private void OnEnable()
+    private GameModes m_currentMode;
+
+    #region Unity BuiltIn Methods
+    protected virtual void OnEnable()
     {
         if (instance == null)
             instance = this;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         instance = null;
     }
+    #endregion
 
-    public void SetupGamemode(GameModes mode)
+    protected void SetupGameMode(GameModes mode)
     {
         // TODO: create game system in each game mode
+        m_currentMode = mode;
     }
 }

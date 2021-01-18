@@ -3,26 +3,31 @@ using UnityEngine;
 using NaughtyAttributes;
 
 [RequireComponent(typeof(PlayerInputData))]
-public class PlayerEntity : LivingEntity
+public class PlayerEntity : LivingEntity, IEntityAbility, IEntityDeath
 {
     // Data Requirements
     [Header("Player Attributes")]
     [SerializeField] private int playerId = 0;
     [SerializeField] private PlayerInputData playerInputData = null;
+    [SerializeField] private Animator playerAnim = null;
 
+    // Object property variables
+    [Space, Header("Inventory & Skills")]
+    [SerializeField] private OwnedWeapons ownedWeapons = new OwnedWeapons();
+    [SerializeField] private GameAbilityList choosenAbility = GameAbilityList.Nothing;
+
+    private AbstractAbility m_genericAbility = null;
     private IEnumerator m_weaponRollRoutine;
 
-    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool isChangingWeapon = false;
+    [BoxGroup("DEBUG")] [SerializeField] [ReadOnly] private bool m_isChangingWeapon = false;
 
-    public PlayerInputData Inputs { get => playerInputData; }
+    public PlayerInputData Inputs => playerInputData;
+    public bool HasAbility => m_genericAbility != null;
+    public Animator PlayerAnimator => playerAnim;
+    public OwnedWeapons CurrentOwnedWeapons => ownedWeapons;
+    public AbstractAbility Ability => m_genericAbility;
 
     #region Unity BuiltIn Methods
-    // Start is called before the first frame update
-    protected override void OnEnable()
-    {
-        
-    }
-
     private void Start()
     {
         ResetEntity();
@@ -31,22 +36,28 @@ public class PlayerEntity : LivingEntity
     // Update is called once per frame
     private void Update()
     {
-        // Handle player wants to change weapon
-        HandleRollingWeapon();
-        // Handle player wants to use ability
-        HandleAbilityUsage();
-        // Send weapon input packet
-        SendWeaponInputPacket();
+        if (!IsDead)
+        {
+            // Handle player wants to change weapon
+            HandleRollingWeapon();
+            // Handle player wants to use ability
+            HandleAbilityUsage();
+            // Send weapon input packet
+            SendWeaponInputPacket();
+        }
+        else
+        {
+            if (!IsDying)
+            {
+                IsDying = true;
+                StartCoroutine(DyingRoutine());
+            }
+        }
     }
 
-    protected override void OnDisable()
+    private void OnDestroy()
     {
-
-    }
-
-    protected override void OnDestroy()
-    {
-
+        ResetEntity();
     }
     #endregion
 
@@ -54,7 +65,7 @@ public class PlayerEntity : LivingEntity
     private void HandleRollingWeapon()
     {
         // Check if currently rolling weapon
-        if (isChangingWeapon)
+        if (m_isChangingWeapon)
             return;
 
         // Change weapon to primary
@@ -90,16 +101,14 @@ public class PlayerEntity : LivingEntity
             dat.ShootReleased = playerInputData.ShootReleased;
         }
     }
-    #endregion
 
-    #region Overriden Methods from Parent Class
-    protected override void HandleAbilityUsage()
+    private void HandleAbilityUsage()
     {
         if (playerInputData.AbilityPressed && Ability != null)
-            Ability.UseAbility();
+            Ability.UseAbility(playerAnim);
     }
 
-    protected override void WeaponHandInit(Weapon handle)
+    private void WeaponHandInit(Weapon handle)
     {
         // Close previous weapon
         if (CurrentOwnedWeapons.HoldOnHand != null)
@@ -109,23 +118,64 @@ public class PlayerEntity : LivingEntity
         // TODO: Connect with animation
         ownedWeapons.HoldOnHand = handle;
         if (CurrentOwnedWeapons.HoldOnHand != null)
+        {
             CurrentOwnedWeapons.HoldOnHand.gameObject.SetActive(true);
+            CurrentOwnedWeapons.HoldOnHand.OnHandOwner = this;
+
+            if (gameObject.tag == "Main Player")
+                PlayerUIManager.instance.LoadWeaponUI(CurrentOwnedWeapons.HoldOnHand);
+        }
     }
 
+    public void SetAbility(GameAbilityList ability)
+    {
+        choosenAbility = ability;
+        m_genericAbility = AbilityFactory.ChooseAbility(ability, this);
+    }
+
+    public void InstantDeath()
+    {
+        Hit(MaxHealth);
+    }
+
+    private IEnumerator DyingRoutine()
+    {
+        // Default dying time
+        float dyingTime = 10f;
+
+        while (dyingTime > 0f)
+        {
+            yield return null;
+            dyingTime -= Time.deltaTime;
+        }
+    }
+
+    private IEnumerator WeaponRollRoutine()
+    {
+        m_isChangingWeapon = true;
+
+        // TODO: Change Weapon animation
+        yield return null;
+
+        m_isChangingWeapon = false;
+    }
+    #endregion
+
+    #region Overriden Methods from Parent Class
     public override void Heal(uint amount)
     {
-        Health += amount;
+        if (Health + amount > MaxHealth)
+            Health = MaxHealth;
+        else
+            Health += amount;
     }
 
     public override void Hit(uint damage)
     {
-        Health -= damage;
-    }
-
-    public override void SetAbility(GameAbilityList ability)
-    {
-        choosenAbility = ability;
-        Ability = AbilityFactory.ChooseAbility(ability, this);
+        if (damage > Health)
+            Health = 0;
+        else
+            Health -= damage;
     }
 
     public override void ResetEntity()
@@ -134,6 +184,7 @@ public class PlayerEntity : LivingEntity
         Health = MaxHealth;
         OxygenLevel = MaxOxygenLvl;
         SetAbility(choosenAbility);
+        IsDying = false;
 
         // Initialize weapon
         if (CurrentOwnedWeapons.HasWeapon)
@@ -145,14 +196,9 @@ public class PlayerEntity : LivingEntity
         }
     }
 
-    protected override IEnumerator WeaponRollRoutine()
+    public override bool CheckRelation(LivingEntity entity)
     {
-        isChangingWeapon = true;
-
-        // TODO: Change Weapon animation
-        yield return null;
-
-        isChangingWeapon = false;
+        return entity.RelationID == RelationID;
     }
     #endregion
 }

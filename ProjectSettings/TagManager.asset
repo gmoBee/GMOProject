@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Target
+  - Bot
+  - Main Player
   layers:
   - Default
   - TransparentFX
@@ -14,13 +15,13 @@ TagManager:
   - UI
   - 
   - 
-  - ground
+  - Ground
   - 
   - Living
   - 
   - 
   - 
-  - 
+  - Minimap Mask
   - 
   - 
   - 

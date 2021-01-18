@@ -7,7 +7,8 @@ public enum WeaponClass
 {
     Undefined = 0,
     Primary = 1,
-    Secondary = 2
+    Secondary = 2,
+    Special = 4
 }
 
 [System.Flags]
@@ -15,13 +16,14 @@ public enum WeaponFlags
 {
     Default = 0,
     NoScope = 1,
-    CantDetect = 2
+    NoDetection = 2,
+    NoFriendlyFire = 4
 }
 
 public abstract class Weapon : MonoBehaviour
 {
     // Template and Data
-    [Header("Data Attributes")]
+    [Header("Weapon Attributes")]
     [SerializeField] private WeaponInputData inputData = null;
     [SerializeField] private uint damageRate = 5;
     [Slider(0.1f, 5f)] [SerializeField] private float fireRate = 1f;
@@ -31,12 +33,15 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] private WeaponClass weaponClass = WeaponClass.Primary;
     [SerializeField] private List<string> targetTags = new List<string>();
     [SerializeField] private AnimationCurve normalFireRate = new AnimationCurve();
+    [SerializeField] private Crosshairs crosshairPacket;
     [SerializeField] private Light flashLight = null;
     [SerializeField] private WeaponFlags flag;
 
     // Properties
     public WeaponInputData InputDataForWeapon => inputData;
     public WeaponBarrel GenericBarrel { get; protected set; } = null;
+    public LivingEntity OnHandOwner { get; set; } = null;
+    public Crosshairs CrosshairPacket => crosshairPacket;
     public WeaponClass WeaponClassification => weaponClass;
     public WeaponFlags Flag => flag;
     
