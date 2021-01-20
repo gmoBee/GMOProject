@@ -370,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputData: {fileID: 7651260113077508426}
   damageRate: 5
-  fireRate: 2.5
+  fireRate: 5
   weaponClass: 1
   targetTags:
   - Bot
